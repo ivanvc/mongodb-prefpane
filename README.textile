@@ -1,0 +1,22 @@
+h1. mongoDB.prefpane
+
+Don't you love mongoDB. Don't you hate it literally drains your memory?
+
+Well, mongoDB prefpane is a simple shortcut to start/stop the mongoDB daemon.
+
+h2. Installation
+
+* Clone the source and compile the source, then run the .prefpane generated.
+* Download the compressed binary version from the downloads page
+
+h2. Updating
+
+It currently doesn't track updates with Sparkle, so you will need to come back later and download new versions.
+
+h2. Configuration
+
+Basically it currently just works if you have your org.mongodb.mongod.plist in ~/Library/LaunchAgents
+
+h2. Known Issues
+
+It crashes System Preferences when re/installing the .prefpane.
