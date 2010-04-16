@@ -15,7 +15,9 @@ It currently doesn't track updates with Sparkle, so you will need to come back l
 
 h2. Configuration
 
-Basically it currently just works if you have your org.mongodb.mongod.plist in ~/Library/LaunchAgents
+It currently runs the mongod binary, the default path for it is "/usr/local/bin/mongod". If you want to change this, edit in DaemonController.h: #define MONGOD_LOCATION @"/usr/local/bin/mongod", and set your location. i.e: #define MONGOD_LOCATION @"/opt/bin/mongod"
+
+If you need to set extra parameters to run mongod, then edit the Arguments textbox from the pane.
 
 h2. Known Issues
 
