@@ -35,7 +35,7 @@ end:
 
 static void kqueue_termination_callback(CFFileDescriptorRef f, CFOptionFlags callBackTypes, void* self)
 {
-    [(id)self performSelector:@selector(daemonTerminated:) withObject:nil];
+    [(id)self performSelector:@selector(daemonStopped)];
 }
 
 static inline void kqueue_watch_pid(pid_t pid, id self)
@@ -71,15 +71,16 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 
 
 @implementation DaemonController
+@synthesize arguments;
 
--(id)initWithDelegate:(id)theDelegate
+-(id)initWithDelegate:(id)theDelegate andArguments:(NSString *)theArguments
 {
-    delegate = [theDelegate retain];
-	
-//    if(pid = mongod_pid())
-//        kqueue_watch_pid(pid, self); // watch the pid for termination
-//    else
-//        START_POLL;
+    delegate  = [theDelegate retain];
+	[self setArguments:theArguments];
+    if(pid = mongod_pid())
+		kqueue_watch_pid(pid, self); // watch the pid for termination
+    else
+		START_POLL;
 	
     return self;
 }
@@ -105,7 +106,8 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 {
     NSTask* task = [[NSTask alloc] init];
     task.launchPath = @"/usr/bin/env";
-    task.arguments = [NSArray arrayWithObjects:@"launchctl", 
+    // try to remove service first
+	task.arguments = [NSArray arrayWithObjects:@"launchctl", 
 											   @"unload", 
 											   [@"~/Library/LaunchAgents/org.mongodb.mongod.plist" stringByExpandingTildeInPath], 
 											   nil];
@@ -114,20 +116,28 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
     
     [task launch];
     [task waitUntilExit];
-    
-    if (task.terminationStatus == 0)
-        // the kqueue event will tell us when the process exits
-        return;
-    
-    // playdarctl failed to stop the daemon, so it's time to be more forceful
+        
+    // if we have it running, then terminate the daemon
     if(daemon_task)
         [daemon_task terminate];
-    else if (pid = mongod_pid() == 0){
-        // actually we weren't even running in the first place
-        START_POLL
-        [delegate performSelector:@selector(daemonStopped)];
-    }else if (kill(pid, SIGTERM) == -1 && errno != ESRCH)
-        [delegate performSelector:@selector(daemonStarted)];
+    else
+	{
+		pid = mongod_pid();
+		if (pid == 0)
+		{
+			// actually we weren't even running in the first place
+			START_POLL
+			[delegate performSelector:@selector(daemonStopped)];
+		}
+		else 
+		{
+			if (kill(pid, SIGHUP) == -1 && errno != ESRCH)
+				[delegate performSelector:@selector(daemonStarted)];
+			else
+				[delegate performSelector:@selector(daemonStopped)];
+		}
+
+    }
 }
 
 -(void)initDaemonTask
@@ -137,7 +147,7 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 	
     [delegate performSelector:@selector(daemonStarted)];
     
-//    daemon_task = [[NSTask alloc] init];
+    daemon_task = [[NSTask alloc] init];
 }
 
 -(void)failedToStartDaemonTask
@@ -145,7 +155,8 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
     NSMutableString* msg = [@"The file at “" mutableCopy];
     [msg appendString:daemon_task.launchPath];
     [msg appendString:@"” could not be executed."];
-    
+	NSLog(@"Failed to start daemon %@ %i", msg);
+	
     [delegate performSelector:@selector(daemonStopped)];
 	
     daemon_task = nil;
@@ -154,26 +165,32 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 
 -(void)start
 {
-    @try {       
-
+    @try {
+		NSMutableArray *arrayOfArguments = [[NSMutableArray alloc] initWithObjects:@"run", nil];
         [self initDaemonTask];
-		NSTask* task = [[NSTask alloc] init];
-		task.launchPath = @"/usr/bin/env";
-		task.arguments = [NSArray arrayWithObjects:@"launchctl", 
-												   @"load", 
-											       [@"~/Library/LaunchAgents/org.mongodb.mongod.plist" stringByExpandingTildeInPath],
-												   
-						  nil];
-		        
-        [task launch];
-		[task waitUntilExit];
-        
+		daemon_task.launchPath = MONGOD_LOCATION;
+		
+		if (arguments) {
+			[arrayOfArguments addObjectsFromArray:[arguments componentsSeparatedByString:@" "]];
+		}
+		daemon_task.arguments = [[arrayOfArguments copy] autorelease];
+		[arrayOfArguments release];
+		
+        [daemon_task launch];
+		START_POLL
     }
     @catch (NSException* e) {
+		NSLog(@"Exception %@", [e reason]);
         [self failedToStartDaemonTask];
     }
 }
 
+-(void)checkReadyForScan
+{
+	if (!pid) // started via Terminal route perhaps
+		kqueue_watch_pid(pid = mongod_pid(), self);
+	[delegate performSelector:@selector(daemonStarted)];
+}
 
 -(void)poll:(NSTimer*)t
 {
@@ -185,7 +202,7 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
     [poll_timer invalidate];
     poll_timer = nil;
     kqueue_watch_pid(pid, self);
-//    [self checkReadyForScan];
+    [self checkReadyForScan];
 }
 
 /////////////////////////////////////////////////////////////////////////// misc

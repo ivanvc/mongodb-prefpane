@@ -9,11 +9,11 @@
 #import "mongoPref.h"
 
 @implementation mongoPref
-@synthesize theSlider;
+@synthesize theSlider, theArguments;
 
 - (void) mainViewDidLoad
 {
-	dC = [[DaemonController alloc] initWithDelegate:self];
+	dC = [[DaemonController alloc] initWithDelegate:self andArguments:[theArguments stringValue]];
 	int theStatus;
 	if ([dC isRunning]) {
 		theStatus = 2;
@@ -21,25 +21,47 @@
 		theStatus = 1;
 	}
 	[theSlider setIntValue:theStatus];
+	
+	preferences		= [[NSUserDefaults standardUserDefaults] retain];
+	preferencesDict = [NSDictionary dictionaryWithObjectsAndKeys:@"", @"arguments", nil];
+	[preferences registerDefaults:preferencesDict];
+	[theArguments setStringValue:[preferences objectForKey:@"arguments"]];
 }
 
-- (void) daemonStopped {
-	NSLog(@"Daemon stopped");
+- (void) daemonStopped 
+{
 	[theSlider setIntValue:1];	
 }
 
-- (void) daemonStarted {
+- (void) daemonStarted 
+{
 	NSLog(@"Daemon started");
 	[theSlider setIntValue:2];
 }
 
-- (IBAction) startStopDaemon:(id)sender {
+
+- (void) dealloc
+{
+	[dC release];
+	[preferences release];
+	[preferencesDict release];
+	[super dealloc];
+}
+
+
+- (IBAction) startStopDaemon:(id)sender 
+{
 	if ([sender intValue] == 1) {
 		[dC stop];
 	} else {
+		[dC setArguments:[theArguments stringValue]];
 		[dC start];
 	}
+	
+}
 
+- (IBAction) changeArguments:(id)sender {
+	[preferences setObject:[theArguments stringValue] forKey:@"arguments"];
 }
 
 @end
