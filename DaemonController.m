@@ -109,15 +109,15 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
     task.launchPath = @"/usr/bin/env";
     // try to remove service first
 	task.arguments = [NSArray arrayWithObjects:@"launchctl", 
-											   @"unload", 
-											   [@"~/Library/LaunchAgents/org.mongodb.mongod.plist" stringByExpandingTildeInPath], 
-											   nil];
+                      @"unload", 
+                      [@"~/Library/LaunchAgents/org.mongodb.mongod.plist" stringByExpandingTildeInPath], 
+                      nil];
     
     [delegate performSelector:@selector(daemonStopped)];
     
     [task launch];
     [task waitUntilExit];
-        
+    
     // if we have it running, then terminate the daemon
     if(daemon_task)
         [daemon_task terminate];
@@ -137,7 +137,7 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 			else
 				[delegate performSelector:@selector(daemonStopped)];
 		}
-
+        
     }
 }
 
