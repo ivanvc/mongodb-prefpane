@@ -16,7 +16,7 @@ It currently doesn't track updates with Sparkle, so you will need to come back l
 h2. Configuration
 
 As of this version it will try to get the mongod binary from popular places (/usr/local/bin/mongod, /usr/bin/mongod, /bin/mongod/, /opt/bin/mongod). If for any weird reason you have it in a differnt location, you will need to set it in DaemonController.h.
-i.e. #define MONGOD_LOCATION @"/fruity/loops/mongod"
+i.e. @#define MONGOD_LOCATION @"/fruity/loops/mongod"@
 
 If you need to set extra parameters to run mongod, then edit the Arguments textbox from the pane.
 
