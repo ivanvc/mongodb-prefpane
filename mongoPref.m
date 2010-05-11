@@ -51,6 +51,15 @@
 
 - (IBAction) startStopDaemon:(id)sender 
 {
+	if (![dC locateBinary]) {
+		[NSAlert alertWithMessageText:@"Cannot locate mongod :(" 
+						defaultButton:@"Ok" 
+					  alternateButton:nil
+						  otherButton:nil 
+			informativeTextWithFormat:@"Please make sure you have the mongod binary either in /usr/local/bin, /usr/bin, /bin, or /opt/bin"];
+		[sender setIntValue:1];
+		return;
+	}
 	if ([sender intValue] == 1) {
 		[dC stop];
 	} else {

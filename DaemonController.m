@@ -75,7 +75,8 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 
 -(id)initWithDelegate:(id)theDelegate andArguments:(NSString *)theArguments
 {
-    delegate  = [theDelegate retain];
+    delegate = [theDelegate retain];
+	location = @"";
 	[self setArguments:theArguments];
     if(pid = mongod_pid())
 		kqueue_watch_pid(pid, self); // watch the pid for termination
@@ -168,7 +169,7 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
     @try {
 		NSMutableArray *arrayOfArguments = [[NSMutableArray alloc] initWithObjects:@"run", nil];
         [self initDaemonTask];
-		daemon_task.launchPath = MONGOD_LOCATION;
+		daemon_task.launchPath = @"/usr/local/bin/mongod";
 		
 		if (arguments) {
 			[arrayOfArguments addObjectsFromArray:[arguments componentsSeparatedByString:@" "]];
@@ -222,5 +223,26 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 //    NSData* data = [[[task standardOutput] fileHandleForReading] readDataToEndOfFile];
 //    return [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] intValue];
 //}
+
+-(bool)locateBinary {
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	if (![location isEqualTo:nil] && ![location isEqualToString:@""]) {
+		return YES;
+	}
+	if([fileManager fileExistsAtPath:@"/usr/local/bin/mongod"]) {
+		location = @"/usr/local/bin/mongod";
+	} else if ([fileManager fileExistsAtPath:@"/usr/bin/mongod"]) {
+		location = @"/usr/bin/mongod";
+	} else if ([fileManager fileExistsAtPath:@"/bin/mongod"]) {
+		location = @"/bin/mongod";
+	} else if ([fileManager fileExistsAtPath:@"/opt/bin/mongod"]) {
+		location = @"/opt/bin/mongod";
+	} else if ([fileManager fileExistsAtPath:MONGOD_LOCATION]) {
+		location = MONGOD_LOCATION;
+	} else {
+		return NO;
+	}
+	return YES;
+}
 
 @end
