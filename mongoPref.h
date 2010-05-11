@@ -11,11 +11,11 @@
 
 @interface mongoPref : NSPreferencePane 
 {
-	NSSlider		 *theSlider;
-	DaemonController *dC;
-	NSTextField		 *theArguments;
-	NSUserDefaults	 *preferences;
-	NSDictionary	 *preferencesDict;
+    NSSlider		 *theSlider;
+    DaemonController *dC;
+    NSTextField		 *theArguments;
+    NSUserDefaults	 *preferences;
+    NSDictionary	 *preferencesDict;
 }
 
 @property (nonatomic, retain) IBOutlet NSSlider		*theSlider;

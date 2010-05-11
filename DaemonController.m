@@ -16,19 +16,19 @@ static pid_t mongod_pid()
     struct kinfo_proc *info;
     size_t N;
     pid_t pid = 0;
-    
+
     if(sysctl(mib, 3, NULL, &N, NULL, 0) < 0)
         return 0; //wrong but unlikely
     if(!(info = NSZoneMalloc(NULL, N)))
         return 0; //wrong but unlikely
     if(sysctl(mib, 3, info, &N, NULL, 0) < 0)
         goto end;
-    
+
     N = N / sizeof(struct kinfo_proc);
     for(size_t i = 0; i < N; i++)
         if(strcmp(info[i].kp_proc.p_comm, "mongod") == 0)
         { pid = info[i].kp_proc.p_pid; break; }
-end:
+    end:
     NSZoneFree(NULL, info);
     return pid;
 }
@@ -44,25 +44,25 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
     struct kevent           changes;
     CFFileDescriptorContext context = { 0, self, NULL, NULL, NULL };
     CFRunLoopSourceRef      rls;
-    
+
     // Create the kqueue and set it up to watch for SIGCHLD. Use the 
     // new-in-10.5 EV_RECEIPT flag to ensure that we get what we expect.
-    
+
     kq = kqueue();
-    
+
     EV_SET(&changes, pid, EVFILT_PROC, EV_ADD | EV_RECEIPT, NOTE_EXIT, 0, NULL);
     (void) kevent(kq, &changes, 1, &changes, 1, NULL);
-    
+
     // Wrap the kqueue in a CFFileDescriptor (new in Mac OS X 10.5!). Then 
     // create a run-loop source from the CFFileDescriptor and add that to the 
     // runloop.
-    
+
     CFFileDescriptorRef ref;
     ref = CFFileDescriptorCreate(NULL, kq, true, kqueue_termination_callback, &context);
     rls = CFFileDescriptorCreateRunLoopSource(NULL, ref, 0);
     CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
     CFRelease(rls);
-    
+
     CFFileDescriptorEnableCallBacks(ref, kCFFileDescriptorReadCallBack);
 }
 
@@ -76,13 +76,13 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 -(id)initWithDelegate:(id)theDelegate andArguments:(NSString *)theArguments
 {
     delegate = [theDelegate retain];
-	location = @"";
-	[self setArguments:theArguments];
+    location = @"";
+    [self setArguments:theArguments];
     if(pid = mongod_pid())
-		kqueue_watch_pid(pid, self); // watch the pid for termination
+        kqueue_watch_pid(pid, self); // watch the pid for termination
     else
-		START_POLL;
-	
+        START_POLL;
+
     return self;
 }
 
@@ -94,12 +94,12 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 -(void)daemonTerminated:(NSNotification*)note
 {    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSTaskDidTerminateNotification object:daemon_task];
-    
+
     daemon_task = nil;
     pid = 0;
-	
+
     START_POLL;
-    
+
     [delegate performSelector:@selector(daemonStopped)];
 }
 
@@ -108,36 +108,36 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
     NSTask* task = [[NSTask alloc] init];
     task.launchPath = @"/usr/bin/env";
     // try to remove service first
-	task.arguments = [NSArray arrayWithObjects:@"launchctl", 
-                      @"unload", 
-                      [@"~/Library/LaunchAgents/org.mongodb.mongod.plist" stringByExpandingTildeInPath], 
-                      nil];
-    
+    task.arguments = [NSArray arrayWithObjects:@"launchctl", 
+        @"unload", 
+        [@"~/Library/LaunchAgents/org.mongodb.mongod.plist" stringByExpandingTildeInPath], 
+        nil];
+
     [delegate performSelector:@selector(daemonStopped)];
-    
+
     [task launch];
     [task waitUntilExit];
-    
+
     // if we have it running, then terminate the daemon
     if(daemon_task)
         [daemon_task terminate];
     else
-	{
-		pid = mongod_pid();
-		if (pid == 0)
-		{
-			// actually we weren't even running in the first place
-			START_POLL
-			[delegate performSelector:@selector(daemonStopped)];
-		}
-		else 
-		{
-			if (kill(pid, SIGHUP) == -1 && errno != ESRCH)
-				[delegate performSelector:@selector(daemonStarted)];
-			else
-				[delegate performSelector:@selector(daemonStopped)];
-		}
-        
+    {
+        pid = mongod_pid();
+        if (pid == 0)
+        {
+            // actually we weren't even running in the first place
+            START_POLL
+                [delegate performSelector:@selector(daemonStopped)];
+        }
+        else 
+        {
+            if (kill(pid, SIGHUP) == -1 && errno != ESRCH)
+                [delegate performSelector:@selector(daemonStarted)];
+            else
+                [delegate performSelector:@selector(daemonStopped)];
+        }
+
     }
 }
 
@@ -145,9 +145,9 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 {
     [poll_timer invalidate];
     poll_timer = nil;
-	
+
     [delegate performSelector:@selector(daemonStarted)];
-    
+
     daemon_task = [[NSTask alloc] init];
 }
 
@@ -156,10 +156,10 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
     NSMutableString* msg = [@"The file at “" mutableCopy];
     [msg appendString:daemon_task.launchPath];
     [msg appendString:@"” could not be executed."];
-	NSLog(@"Failed to start daemon %@ %i", msg);
-	
+    NSLog(@"Failed to start daemon %@ %i", msg);
+
     [delegate performSelector:@selector(daemonStopped)];
-	
+
     daemon_task = nil;
     [msg release];
 }
@@ -167,38 +167,38 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 -(void)start
 {
     @try {
-		NSMutableArray *arrayOfArguments = [[NSMutableArray alloc] initWithObjects:@"run", nil];
+        NSMutableArray *arrayOfArguments = [[NSMutableArray alloc] initWithObjects:@"run", nil];
         [self initDaemonTask];
-		daemon_task.launchPath = @"/usr/local/bin/mongod";
-		
-		if (arguments) {
-			[arrayOfArguments addObjectsFromArray:[arguments componentsSeparatedByString:@" "]];
-		}
-		daemon_task.arguments = [[arrayOfArguments copy] autorelease];
-		[arrayOfArguments release];
-		
+        daemon_task.launchPath = @"/usr/local/bin/mongod";
+
+        if (arguments) {
+            [arrayOfArguments addObjectsFromArray:[arguments componentsSeparatedByString:@" "]];
+        }
+        daemon_task.arguments = [[arrayOfArguments copy] autorelease];
+        [arrayOfArguments release];
+
         [daemon_task launch];
-		START_POLL
-    }
+        START_POLL
+        }
     @catch (NSException* e) {
-		NSLog(@"Exception %@", [e reason]);
+        NSLog(@"Exception %@", [e reason]);
         [self failedToStartDaemonTask];
     }
 }
 
 -(void)checkReadyForScan
 {
-	if (!pid) // started via Terminal route perhaps
-		kqueue_watch_pid(pid = mongod_pid(), self);
-	[delegate performSelector:@selector(daemonStarted)];
+    if (!pid) // started via Terminal route perhaps
+        kqueue_watch_pid(pid = mongod_pid(), self);
+    [delegate performSelector:@selector(daemonStarted)];
 }
 
 -(void)poll:(NSTimer*)t
 {
     if (pid = mongod_pid() == 0) {
-		[delegate performSelector:@selector(daemonStopped)];
-		return;
-	}
+        [delegate performSelector:@selector(daemonStopped)];
+        return;
+    }
     [delegate performSelector:@selector(daemonStarted)];
     [poll_timer invalidate];
     poll_timer = nil;
@@ -225,24 +225,24 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 //}
 
 -(bool)locateBinary {
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	if (![location isEqualTo:nil] && ![location isEqualToString:@""]) {
-		return YES;
-	}
-	if([fileManager fileExistsAtPath:@"/usr/local/bin/mongod"]) {
-		location = @"/usr/local/bin/mongod";
-	} else if ([fileManager fileExistsAtPath:@"/usr/bin/mongod"]) {
-		location = @"/usr/bin/mongod";
-	} else if ([fileManager fileExistsAtPath:@"/bin/mongod"]) {
-		location = @"/bin/mongod";
-	} else if ([fileManager fileExistsAtPath:@"/opt/bin/mongod"]) {
-		location = @"/opt/bin/mongod";
-	} else if ([fileManager fileExistsAtPath:MONGOD_LOCATION]) {
-		location = MONGOD_LOCATION;
-	} else {
-		return NO;
-	}
-	return YES;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![location isEqualTo:nil] && ![location isEqualToString:@""]) {
+        return YES;
+    }
+    if([fileManager fileExistsAtPath:@"/usr/local/bin/mongod"]) {
+        location = @"/usr/local/bin/mongod";
+    } else if ([fileManager fileExistsAtPath:@"/usr/bin/mongod"]) {
+        location = @"/usr/bin/mongod";
+    } else if ([fileManager fileExistsAtPath:@"/bin/mongod"]) {
+        location = @"/bin/mongod";
+    } else if ([fileManager fileExistsAtPath:@"/opt/bin/mongod"]) {
+        location = @"/opt/bin/mongod";
+    } else if ([fileManager fileExistsAtPath:MONGOD_LOCATION]) {
+        location = MONGOD_LOCATION;
+    } else {
+        return NO;
+    }
+    return YES;
 }
 
 @end

@@ -14,13 +14,13 @@
 @interface DaemonController : NSObject
 {
     id delegate;
-    
+
     NSTask	 *daemon_task;
     NSTimer	 *poll_timer;
     NSTimer	 *check_startup_status_timer;
     pid_t	  pid;
-	NSString *arguments;
-	NSString *location;
+    NSString *arguments;
+    NSString *location;
 }
 
 @property (nonatomic, retain) NSString *arguments;
