@@ -7,19 +7,21 @@
 //
 
 #import <PreferencePanes/PreferencePanes.h>
-#import "DaemonController.h"
+
+@class DaemonController;
+@class MBSliderButton;
 
 @interface mongoPref : NSPreferencePane 
 {
-    NSSlider		 *theSlider;
-    DaemonController *dC;
-    NSTextField		 *theArguments;
-    NSUserDefaults	 *preferences;
-    NSDictionary	 *preferencesDict;
+  MBSliderButton *theSlider;
+  DaemonController *dC;
+  NSTextField		 *theArguments;
+  NSUserDefaults	 *preferences;
+  NSDictionary	 *preferencesDict;
 }
 
-@property (nonatomic, retain) IBOutlet NSSlider		*theSlider;
-@property (nonatomic, retain) IBOutlet NSTextField  *theArguments;
+@property (nonatomic, retain) IBOutlet MBSliderButton	*theSlider;
+@property (nonatomic, retain) IBOutlet NSTextField *theArguments;
 
 - (void) mainViewDidLoad;
 - (void) daemonStopped;

@@ -23,3 +23,7 @@ If you need to set extra parameters to run mongod, then edit the Arguments textb
 h2. Known Issues
 
 It crashes System Preferences when re/installing the .prefpane.
+
+h2. Credits
+
+DaemonController and MBSliderButton based in the ones made by Max Howell

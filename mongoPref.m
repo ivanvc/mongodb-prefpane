@@ -7,70 +7,66 @@
 //
 
 #import "mongoPref.h"
+#import "MBSliderButton.h"
+#import "DaemonController.h"
 
 @implementation mongoPref
-@synthesize theSlider, theArguments;
+@synthesize theSlider;
+@synthesize theArguments;
 
-- (void) mainViewDidLoad
+- (void) mainViewDidLoad;
 {
-    dC = [[DaemonController alloc] initWithDelegate:self andArguments:[theArguments stringValue]];
-    int theStatus;
-    if ([dC isRunning]) {
-        theStatus = 2;
-    } else {
-        theStatus = 1;
-    }
-    [theSlider setIntValue:theStatus];
-
-    preferences		= [[NSUserDefaults standardUserDefaults] retain];
-    preferencesDict = [NSDictionary dictionaryWithObjectsAndKeys:@"", @"arguments", nil];
-    [preferences registerDefaults:preferencesDict];
-    [theArguments setStringValue:[preferences objectForKey:@"arguments"]];
+  dC = [[DaemonController alloc] initWithDelegate:self andArguments:[theArguments stringValue]];
+  
+  [theSlider setState:[dC isRunning] ? NSOnState : NSOffState];
+  
+  preferences	= [[NSUserDefaults standardUserDefaults] retain];
+  preferencesDict = [NSDictionary dictionaryWithObjectsAndKeys:@"", @"arguments", nil];
+  [preferences registerDefaults:preferencesDict];
+  [theArguments setStringValue:[preferences objectForKey:@"arguments"]];
 }
 
-- (void) daemonStopped 
+- (void) daemonStopped;
 {
-    [theSlider setIntValue:1];	
+  [theSlider setState:NSOffState animate:YES];
 }
 
-- (void) daemonStarted 
+- (void) daemonStarted; 
 {
-    NSLog(@"Daemon started");
-    [theSlider setIntValue:2];
+  [theSlider setState:NSOnState animate:YES];
 }
 
-
-- (void) dealloc
+- (void) dealloc;
 {
-    [dC release];
-    [preferences release];
-    [preferencesDict release];
-    [super dealloc];
+  [dC release];
+  [preferences release];
+  [preferencesDict release];
+  [super dealloc];
 }
 
-
-- (IBAction) startStopDaemon:(id)sender 
+- (IBAction) startStopDaemon:(id)sender;
 {
-    if (![dC locateBinary]) {
-        [NSAlert alertWithMessageText:@"Cannot locate mongod :(" 
-            defaultButton:@"Ok" 
-            alternateButton:nil
-            otherButton:nil 
-            informativeTextWithFormat:@"Please make sure you have the mongod binary either in /usr/local/bin, /usr/bin, /bin, or /opt/bin"];
-        [sender setIntValue:1];
-        return;
-    }
-    if ([sender intValue] == 1) {
-        [dC stop];
-    } else {
-        [dC setArguments:[theArguments stringValue]];
-        [dC start];
-    }
-
+  if (![dC locateBinary]) {
+    [NSAlert alertWithMessageText:@"Cannot locate mongod :(" 
+                    defaultButton:@"Ok" 
+                  alternateButton:nil
+                      otherButton:nil 
+        informativeTextWithFormat:@"Please make sure you have the mongod binary either in /usr/local/bin, /usr/bin, /bin, or /opt/bin"];
+    [theSlider setState:NSOffState];
+    return;
+  }
+  if (theSlider.state == NSOffState) {
+    [dC stop];
+  } else {
+    [dC setArguments:[theArguments stringValue]];
+    [dC start];
+  }
+  
 }
 
-- (IBAction) changeArguments:(id)sender {
-    [preferences setObject:[theArguments stringValue] forKey:@"arguments"];
+- (IBAction) changeArguments:(id)sender;
+{
+  [preferences setObject:[theArguments stringValue] forKey:@"arguments"];
 }
 
 @end
