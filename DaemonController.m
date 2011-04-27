@@ -169,7 +169,7 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
     @try {
         NSMutableArray *arrayOfArguments = [[NSMutableArray alloc] initWithObjects:@"run", nil];
         [self initDaemonTask];
-        daemon_task.launchPath = @"/usr/local/bin/mongod";
+        daemon_task.launchPath = location;
 
         if (arguments) {
             [arrayOfArguments addObjectsFromArray:[arguments componentsSeparatedByString:@" "]];
