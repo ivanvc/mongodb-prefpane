@@ -20,6 +20,8 @@
 		2CD23D0C11BC6AA2005B6619 /* MBSliderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD23D0A11BC6AA2005B6619 /* MBSliderButton.m */; };
 		2CD23D4111BC7082005B6619 /* button_surround.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CD23D3F11BC7082005B6619 /* button_surround.png */; };
 		2CD23D4211BC7082005B6619 /* button_knob.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CD23D4011BC7082005B6619 /* button_knob.png */; };
+		2CD9EB3E1384C231001BE97E /* ArgumentsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CD9EB3B1384C231001BE97E /* ArgumentsViewController.h */; };
+		2CD9EB3F1384C231001BE97E /* ArgumentsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD9EB3C1384C231001BE97E /* ArgumentsViewController.m */; };
 		8D202CEA0486D31800D8A456 /* mongo_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 32DBCFA20370C41700C91783 /* mongo_Prefix.pch */; };
 		8D202CEB0486D31800D8A456 /* mongoPref.h in Headers */ = {isa = PBXBuildFile; fileRef = F506C03C013D9D7901CA16C8 /* mongoPref.h */; };
 		8D202CED0486D31800D8A456 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
@@ -47,6 +49,8 @@
 		2CD23D0A11BC6AA2005B6619 /* MBSliderButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBSliderButton.m; sourceTree = "<group>"; };
 		2CD23D3F11BC7082005B6619 /* button_surround.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_surround.png; sourceTree = "<group>"; };
 		2CD23D4011BC7082005B6619 /* button_knob.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_knob.png; sourceTree = "<group>"; };
+		2CD9EB3B1384C231001BE97E /* ArgumentsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ArgumentsViewController.h; sourceTree = "<group>"; };
+		2CD9EB3C1384C231001BE97E /* ArgumentsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ArgumentsViewController.m; sourceTree = "<group>"; };
 		32DBCFA20370C41700C91783 /* mongo_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongo_Prefix.pch; sourceTree = "<group>"; };
 		8D202CF70486D31800D8A456 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D202CF80486D31800D8A456 /* mongo.prefPane */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = mongo.prefPane; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -118,6 +122,8 @@
 				F506C03D013D9D7901CA16C8 /* mongoPref.m */,
 				2CD23D0911BC6AA2005B6619 /* MBSliderButton.h */,
 				2CD23D0A11BC6AA2005B6619 /* MBSliderButton.m */,
+				2CD9EB3B1384C231001BE97E /* ArgumentsViewController.h */,
+				2CD9EB3C1384C231001BE97E /* ArgumentsViewController.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -167,6 +173,7 @@
 				8D202CEB0486D31800D8A456 /* mongoPref.h in Headers */,
 				2C62EDFC117425F700F27B65 /* DaemonController.h in Headers */,
 				2CD23D0B11BC6AA2005B6619 /* MBSliderButton.h in Headers */,
+				2CD9EB3E1384C231001BE97E /* ArgumentsViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +263,7 @@
 				8D202CF10486D31800D8A456 /* mongoPref.m in Sources */,
 				2C62EDFD117425F700F27B65 /* DaemonController.m in Sources */,
 				2CD23D0C11BC6AA2005B6619 /* MBSliderButton.m in Sources */,
+				2CD9EB3F1384C231001BE97E /* ArgumentsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
