@@ -14,6 +14,9 @@
 		2C62ECCF1173CFA500F27B65 /* switcher-text-on.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECC81173CFA500F27B65 /* switcher-text-on.png */; };
 		2C62EDFC117425F700F27B65 /* DaemonController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C62EDFA117425F700F27B65 /* DaemonController.h */; };
 		2C62EDFD117425F700F27B65 /* DaemonController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C62EDFB117425F700F27B65 /* DaemonController.m */; };
+		2C79991813861CEA000F1A2E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C79991713861CEA000F1A2E /* Sparkle.framework */; };
+		2C79991913861CF7000F1A2E /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2C79991713861CEA000F1A2E /* Sparkle.framework */; };
+		2C79991B138622A5000F1A2E /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 2C79991A138622A5000F1A2E /* dsa_pub.pem */; };
 		2CD23D0B11BC6AA2005B6619 /* MBSliderButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CD23D0911BC6AA2005B6619 /* MBSliderButton.h */; };
 		2CD23D0C11BC6AA2005B6619 /* MBSliderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD23D0A11BC6AA2005B6619 /* MBSliderButton.m */; };
 		2CD23D4111BC7082005B6619 /* button_surround.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CD23D3F11BC7082005B6619 /* button_surround.png */; };
@@ -27,6 +30,19 @@
 		8D202CF40486D31800D8A456 /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506C035013D953901CA16C8 /* PreferencePanes.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		2C79991513861C8E000F1A2E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2C79991913861CF7000F1A2E /* Sparkle.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -39,6 +55,8 @@
 		2C62ECC81173CFA500F27B65 /* switcher-text-on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "switcher-text-on.png"; sourceTree = "<group>"; };
 		2C62EDFA117425F700F27B65 /* DaemonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DaemonController.h; sourceTree = "<group>"; };
 		2C62EDFB117425F700F27B65 /* DaemonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DaemonController.m; sourceTree = "<group>"; wrapsLines = 1; };
+		2C79991713861CEA000F1A2E /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Lib/Sparkle.framework; sourceTree = "<group>"; };
+		2C79991A138622A5000F1A2E /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		2CD23D0911BC6AA2005B6619 /* MBSliderButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBSliderButton.h; sourceTree = "<group>"; };
 		2CD23D0A11BC6AA2005B6619 /* MBSliderButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBSliderButton.m; sourceTree = "<group>"; };
 		2CD23D3F11BC7082005B6619 /* button_surround.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_surround.png; sourceTree = "<group>"; };
@@ -59,6 +77,7 @@
 			files = (
 				8D202CF30486D31800D8A456 /* Cocoa.framework in Frameworks */,
 				8D202CF40486D31800D8A456 /* PreferencePanes.framework in Frameworks */,
+				2C79991813861CEA000F1A2E /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -89,6 +108,7 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2C79991A138622A5000F1A2E /* dsa_pub.pem */,
 				2CD23D3F11BC7082005B6619 /* button_surround.png */,
 				2CD23D4011BC7082005B6619 /* button_knob.png */,
 				2C62ECC61173CFA500F27B65 /* switcher-text-off.png */,
@@ -119,6 +139,7 @@
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2C79991713861CEA000F1A2E /* Sparkle.framework */,
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
 				F506C035013D953901CA16C8 /* PreferencePanes.framework */,
 			);
@@ -176,6 +197,7 @@
 				8D202CF00486D31800D8A456 /* Sources */,
 				8D202CF20486D31800D8A456 /* Frameworks */,
 				8D202CF50486D31800D8A456 /* Rez */,
+				2C79991513861C8E000F1A2E /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -225,6 +247,7 @@
 				2C62ECCF1173CFA500F27B65 /* switcher-text-on.png in Resources */,
 				2CD23D4111BC7082005B6619 /* button_surround.png in Resources */,
 				2CD23D4211BC7082005B6619 /* button_knob.png in Resources */,
+				2C79991B138622A5000F1A2E /* dsa_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,7 +304,8 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../CocoaMondoKit 1.1\"",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/Lib\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -303,7 +327,8 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../CocoaMondoKit 1.1\"",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/Lib\"",
 				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
