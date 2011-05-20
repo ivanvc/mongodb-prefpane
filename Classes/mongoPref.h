@@ -10,14 +10,16 @@
 
 @class DaemonController;
 @class MBSliderButton;
+@class SUUpdater;
 
-@interface mongoPref : NSPreferencePane 
-{
-  MBSliderButton *theSlider;
+@interface mongoPref : NSPreferencePane {
+  MBSliderButton   *theSlider;
   DaemonController *dC;
-  NSTextField		 *theArguments;
-  NSUserDefaults	 *preferences;
-  NSDictionary	 *preferencesDict;
+  NSTextField      *theArguments;
+  NSUserDefaults   *preferences;
+  NSDictionary     *preferencesDict;
+@private
+  SUUpdater        *updater;
 }
 
 @property (nonatomic, retain) IBOutlet MBSliderButton	*theSlider;
@@ -28,11 +30,5 @@
 - (void) daemonStarted;
 - (IBAction) startStopDaemon:(id)sender;
 - (IBAction) changeArguments:(id)sender;
-
-@end
-
-@interface mongoPref(Private)
-
-- (void) checkStatus;
 
 @end
