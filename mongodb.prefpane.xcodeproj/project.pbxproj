@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2C073805117618F100452AFE /* MIT-LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 2C073804117618F100452AFE /* MIT-LICENSE */; };
-		2C0738071176190300452AFE /* README.textile in Resources */ = {isa = PBXBuildFile; fileRef = 2C0738061176190300452AFE /* README.textile */; };
 		2C62ECAD1173C84500F27B65 /* logo-mongodb-onwhite.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECAC1173C84500F27B65 /* logo-mongodb-onwhite.png */; };
 		2C62ECB61173CD8200F27B65 /* mongo.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECB51173CD8200F27B65 /* mongo.icns */; };
 		2C62ECBF1173CEA800F27B65 /* mongoPref.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECBE1173CEA800F27B65 /* mongoPref.tiff */; };
@@ -34,8 +32,6 @@
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		2C073804117618F100452AFE /* MIT-LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "MIT-LICENSE"; sourceTree = "<group>"; };
-		2C0738061176190300452AFE /* README.textile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.textile; sourceTree = "<group>"; };
 		2C62ECAC1173C84500F27B65 /* logo-mongodb-onwhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-mongodb-onwhite.png"; sourceTree = "<group>"; };
 		2C62ECB51173CD8200F27B65 /* mongo.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mongo.icns; sourceTree = "<group>"; };
 		2C62ECBE1173CEA800F27B65 /* mongoPref.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = mongoPref.tiff; sourceTree = "<group>"; };
@@ -72,8 +68,6 @@
 		089C166AFE841209C02AAC07 /* mongo */ = {
 			isa = PBXGroup;
 			children = (
-				2C073804117618F100452AFE /* MIT-LICENSE */,
-				2C0738061176190300452AFE /* README.textile */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				32DBCFA10370C40200C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
@@ -229,8 +223,6 @@
 				2C62ECBF1173CEA800F27B65 /* mongoPref.tiff in Resources */,
 				2C62ECCD1173CFA500F27B65 /* switcher-text-off.png in Resources */,
 				2C62ECCF1173CFA500F27B65 /* switcher-text-on.png in Resources */,
-				2C073805117618F100452AFE /* MIT-LICENSE in Resources */,
-				2C0738071176190300452AFE /* README.textile in Resources */,
 				2CD23D4111BC7082005B6619 /* button_surround.png in Resources */,
 				2CD23D4211BC7082005B6619 /* button_knob.png in Resources */,
 			);
