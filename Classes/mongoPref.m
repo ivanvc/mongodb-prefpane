@@ -25,7 +25,7 @@
 
 - (void) mainViewDidLoad {
   self.updater = [SUUpdater updaterForBundle:[NSBundle bundleForClass:[self class]]];
-
+  [updater resetUpdateCycle];
   dC = [[DaemonController alloc] initWithDelegate:self andArguments:[theArguments stringValue]];
 
   [theSlider setState:[dC isRunning] ? NSOnState : NSOffState];
@@ -48,6 +48,7 @@
 
 - (void) dealloc;
 {
+  [updater release];
   [dC release];
   [preferences release];
   [preferencesDict release];
