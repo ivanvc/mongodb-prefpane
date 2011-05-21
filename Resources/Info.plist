@@ -30,7 +30,11 @@
 	<string>mongo</string>
 	<key>NSPrincipalClass</key>
 	<string>mongoPref</string>
+	<key>SUFeedURL</key>
+	<string>http://ivanvc.github.com/mongodb-prefpane/appcast.xml</string>
 	<key>SUPublicDSAKeyFile</key>
 	<string>dsa_pub.pem</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
 </dict>
 </plist>
