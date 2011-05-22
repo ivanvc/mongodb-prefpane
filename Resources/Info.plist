@@ -17,11 +17,11 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.0.2</string>
+	<string>0.0.3</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.0.2</string>
+	<string>0.0.3</string>
 	<key>NSMainNibFile</key>
 	<string>mongoPref</string>
 	<key>NSPrefPaneIconFile</key>
@@ -30,11 +30,11 @@
 	<string>mongo</string>
 	<key>NSPrincipalClass</key>
 	<string>mongoPref</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
 	<key>SUFeedURL</key>
 	<string>http://ivanvc.github.com/mongodb-prefpane/appcast.xml</string>
 	<key>SUPublicDSAKeyFile</key>
 	<string>dsa_pub.pem</string>
-	<key>SUEnableAutomaticChecks</key>
-	<true/>
 </dict>
 </plist>
