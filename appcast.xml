@@ -5,5 +5,18 @@
     <link>http://ivanvc.github.com/mongodb-prefpane/appcast.xml</link>
     <description>Most recent changes with links to updates.</description>
     <language>en</language>      
+    <item>
+      <title>Version 0.0.3</title>
+      <sparkle:releaseNotesLink>http://ivanvc.github.com/mongodb-prefpane/release-notes.html#version-0.0.3</sparkle:releaseNotesLink>
+      <pubDate>Sun, 22 May 2011 00:16:25 -0500</pubDate>
+      <enclosure
+        url="http://github.com/downloads/ivanvc/mongodb-prefpane/mongodb.prefpane 0.0.3.zip"
+        sparkle:version="0.0.3"
+        type="application/octet-stream"
+        length="617843"
+        sparkle:dsaSignature="MC4CFQCue5YQIK3z1lnneoZRl4TR0fbAKAIVAKg5lb7WxXJ2MPlPLOy1QpGXWlNm"
+        />
+    </item>
+
   </channel>
 </rss>
