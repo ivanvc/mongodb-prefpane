@@ -6,6 +6,21 @@
 	objectVersion = 45;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		2C5472171388BF4E007B8E64 /* Distribution */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2C5472181388BF4E007B8E64 /* Build configuration list for PBXAggregateTarget "Distribution" */;
+			buildPhases = (
+				2C54721D1388BF57007B8E64 /* ShellScript */,
+			);
+			dependencies = (
+				2C54721C1388BF55007B8E64 /* PBXTargetDependency */,
+			);
+			name = Distribution;
+			productName = Distribution;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		2C62ECAD1173C84500F27B65 /* logo-mongodb-onwhite.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECAC1173C84500F27B65 /* logo-mongodb-onwhite.png */; };
 		2C62ECB61173CD8200F27B65 /* mongo.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECB51173CD8200F27B65 /* mongo.icns */; };
@@ -29,6 +44,16 @@
 		8D202CF30486D31800D8A456 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */; };
 		8D202CF40486D31800D8A456 /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506C035013D953901CA16C8 /* PreferencePanes.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		2C54721B1388BF55007B8E64 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D202CE80486D31800D8A456;
+			remoteInfo = mongo;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		2C79991513861C8E000F1A2E /* CopyFiles */ = {
@@ -229,6 +254,7 @@
 			projectRoot = "";
 			targets = (
 				8D202CE80486D31800D8A456 /* mongo */,
+				2C5472171388BF4E007B8E64 /* Distribution */,
 			);
 		};
 /* End PBXProject section */
@@ -263,6 +289,22 @@
 		};
 /* End PBXRezBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2C54721D1388BF57007B8E64 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "set -o errexit\n\n[ $BUILD_STYLE = Release ] || { echo Distribution target requires \"'Release'\" build style; false; }\n\nPREF_PANE_NAME=\"mongo.prefPane\"\n\nVERSION=$(defaults read \"$BUILT_PRODUCTS_DIR/$PREF_PANE_NAME/Contents/Info\" CFBundleVersion)\nDOWNLOAD_BASE_URL=\"http://github.com/downloads/ivanvc/mongodb-prefpane\"\nRELEASENOTES_URL=\"http://ivanvc.github.com/mongodb-prefpane/release-notes.html#version-$VERSION\"\n\nARCHIVE_FILENAME=\"$PROJECT_NAME $VERSION.zip\"\nDOWNLOAD_URL=\"$DOWNLOAD_BASE_URL/$ARCHIVE_FILENAME\"\nKEYCHAIN_PRIVKEY_NAME=\"mongo-prefPane Private Key\"\n\n#WD=$PWD\ncd \"$BUILT_PRODUCTS_DIR\"\nrm -f \"$PREF_PANE_NAME\"*.zip\nditto -ck --keepParent \"$PREF_PANE_NAME\" \"$ARCHIVE_FILENAME\"\n\nSIZE=$(stat -f %z \"$ARCHIVE_FILENAME\")\nPUBDATE=$(LC_TIME=en_US date +\"%a, %d %b %G %T %z\")\nSIGNATURE=$(\nopenssl dgst -sha1 -binary < \"$ARCHIVE_FILENAME\" \\\n| openssl dgst -dss1 -sign <(security find-generic-password -g -l \"$KEYCHAIN_PRIVKEY_NAME\" 2>&1 1>/dev/null | perl -pe '($_) = /\"(.+)\"/; s/\\\\012/\\n/g' | ruby -e \"puts STDIN.readlines.join.match(/<string>(.*)<\\/string>/m)[1]\") \\\n| openssl enc -base64\n)\n\n[ $SIGNATURE ] || { echo Unable to load signing private key with name \"'$KEYCHAIN_PRIVKEY_NAME'\" from keychain; false; }\n\ncat <<EOF > appcastnode.xml\n<item>\n<title>Version $VERSION</title>\n<sparkle:releaseNotesLink>$RELEASENOTES_URL</sparkle:releaseNotesLink>\n<pubDate>$PUBDATE</pubDate>\n<enclosure\nurl=\"$DOWNLOAD_URL\"\nsparkle:version=\"$VERSION\"\ntype=\"application/octet-stream\"\nlength=\"$SIZE\"\nsparkle:dsaSignature=\"$SIGNATURE\"\n/>\n</item>\nEOF\n\nopen $BUILT_PRODUCTS_DIR";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8D202CF00486D31800D8A456 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -275,6 +317,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2C54721C1388BF55007B8E64 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8D202CE80486D31800D8A456 /* mongo */;
+			targetProxy = 2C54721B1388BF55007B8E64 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		089C167DFE841241C02AAC07 /* InfoPlist.strings */ = {
@@ -369,6 +419,22 @@
 			};
 			name = Release;
 		};
+		2C5472191388BF4E007B8E64 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2C54721A1388BF4E007B8E64 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -389,6 +455,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		2C5472181388BF4E007B8E64 /* Build configuration list for PBXAggregateTarget "Distribution" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C5472191388BF4E007B8E64 /* Debug */,
+				2C54721A1388BF4E007B8E64 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
