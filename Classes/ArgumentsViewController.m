@@ -10,6 +10,7 @@
 
 @interface ArgumentsViewController(/* Hidden Methods*/)
 @property (nonatomic, retain) NSMutableArray *arguments;
+- (void)removeArgument:(id)sender;
 @end
 
 @implementation ArgumentsViewController
@@ -38,8 +39,8 @@
     return [arguments objectAtIndex:row];
   if ([[tableColumn identifier] isEqualToString:@"parametersColumn"])
     return @"parameter";
-  if ([[tableColumn identifier] isEqualToString:@"deleteColumn"])
-    return @"-";
+//  if ([[tableColumn identifier] isEqualToString:@"deleteColumn"])
+//    return @"-";
 
   return nil;
 }
@@ -53,11 +54,30 @@
   return [[tableColumn identifier] isEqualToString:@"argumentColumn"] || [[tableColumn identifier] isEqualToString:@"parametersColumn"];
 }
 
+- (NSCell *)tableView:(NSTableView *)tableView dataCellForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
+  NSCell *cell = [tableColumn dataCell];
+  if ([[tableColumn identifier] isEqualToString:@"deleteColumn"]) {
+    NSButtonCell *buttonCell = [[NSButtonCell alloc] init];
+    [buttonCell setButtonType:NSMomentaryPushInButton];
+    [buttonCell setBezeled:YES];
+    [buttonCell setBezelStyle:NSSmallSquareBezelStyle];
+    [buttonCell setTitle:@"-"];
+    [buttonCell setTarget:self];
+    [buttonCell setAction:@selector(removeArgument:)];
+    return [buttonCell autorelease];
+  }
+  return cell;
+}
+
 #pragma mark - Interface Builder Actions
+
+- (void)removeArgument:(id)sender {
+  [arguments removeObjectAtIndex:[tableView selectedRow]];
+  [self.tableView reloadData];
+}
 
 - (IBAction)addRow:(id)sender {
   [arguments addObject:[NSString stringWithFormat:@"Object %d", [arguments count]]];
-  NSLog(@"Adding row: %@", arguments);
   [self.tableView reloadData];
 }
 

@@ -471,6 +471,7 @@
 				2C54721A1388BF4E007B8E64 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
