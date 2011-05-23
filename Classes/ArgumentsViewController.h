@@ -10,8 +10,12 @@
 
 @interface ArgumentsViewController : NSViewController <NSTableViewDelegate, NSTableViewDataSource> {
   NSTableView *tableView;
+@private
+  NSMutableArray *arguments;
 }
 
 @property (nonatomic, retain) IBOutlet NSTableView *tableView;
+
+- (IBAction)addRow:(id)sender;
 
 @end
