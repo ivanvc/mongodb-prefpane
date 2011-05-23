@@ -9,15 +9,25 @@
 #import "mongoPref.h"
 #import "MBSliderButton.h"
 #import "DaemonController.h"
+#import "Sparkle/Sparkle.h"
+
+@interface mongoPref(/* Hidden Methods */)
+- (void)checkStatus;
+
+@property (nonatomic, retain) SUUpdater *updater;
+
+@end
 
 @implementation mongoPref
 @synthesize theSlider;
 @synthesize theArguments;
+@synthesize updater;
 
-- (void) mainViewDidLoad;
-{
+- (void) mainViewDidLoad {
+  self.updater = [SUUpdater updaterForBundle:[NSBundle bundleForClass:[self class]]];
+  [updater resetUpdateCycle];
   dC = [[DaemonController alloc] initWithDelegate:self andArguments:[theArguments stringValue]];
-  
+
   [theSlider setState:[dC isRunning] ? NSOnState : NSOffState];
   
   preferences	= [[NSUserDefaults standardUserDefaults] retain];
@@ -38,6 +48,7 @@
 
 - (void) dealloc;
 {
+  [updater release];
   [dC release];
   [preferences release];
   [preferencesDict release];

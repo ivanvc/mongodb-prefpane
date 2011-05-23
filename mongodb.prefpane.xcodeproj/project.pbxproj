@@ -6,9 +6,22 @@
 	objectVersion = 45;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		2C5472171388BF4E007B8E64 /* Distribution */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 2C5472181388BF4E007B8E64 /* Build configuration list for PBXAggregateTarget "Distribution" */;
+			buildPhases = (
+				2C54721D1388BF57007B8E64 /* ShellScript */,
+			);
+			dependencies = (
+				2C54721C1388BF55007B8E64 /* PBXTargetDependency */,
+			);
+			name = Distribution;
+			productName = Distribution;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
-		2C073805117618F100452AFE /* MIT-LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 2C073804117618F100452AFE /* MIT-LICENSE */; };
-		2C0738071176190300452AFE /* README.textile in Resources */ = {isa = PBXBuildFile; fileRef = 2C0738061176190300452AFE /* README.textile */; };
 		2C62ECAD1173C84500F27B65 /* logo-mongodb-onwhite.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECAC1173C84500F27B65 /* logo-mongodb-onwhite.png */; };
 		2C62ECB61173CD8200F27B65 /* mongo.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECB51173CD8200F27B65 /* mongo.icns */; };
 		2C62ECBF1173CEA800F27B65 /* mongoPref.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECBE1173CEA800F27B65 /* mongoPref.tiff */; };
@@ -16,6 +29,9 @@
 		2C62ECCF1173CFA500F27B65 /* switcher-text-on.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECC81173CFA500F27B65 /* switcher-text-on.png */; };
 		2C62EDFC117425F700F27B65 /* DaemonController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C62EDFA117425F700F27B65 /* DaemonController.h */; };
 		2C62EDFD117425F700F27B65 /* DaemonController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C62EDFB117425F700F27B65 /* DaemonController.m */; };
+		2C79991813861CEA000F1A2E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C79991713861CEA000F1A2E /* Sparkle.framework */; };
+		2C79991913861CF7000F1A2E /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2C79991713861CEA000F1A2E /* Sparkle.framework */; };
+		2C79991B138622A5000F1A2E /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 2C79991A138622A5000F1A2E /* dsa_pub.pem */; };
 		2CD23D0B11BC6AA2005B6619 /* MBSliderButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 2CD23D0911BC6AA2005B6619 /* MBSliderButton.h */; };
 		2CD23D0C11BC6AA2005B6619 /* MBSliderButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CD23D0A11BC6AA2005B6619 /* MBSliderButton.m */; };
 		2CD23D4111BC7082005B6619 /* button_surround.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CD23D3F11BC7082005B6619 /* button_surround.png */; };
@@ -31,13 +47,34 @@
 		8D202CF40486D31800D8A456 /* PreferencePanes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506C035013D953901CA16C8 /* PreferencePanes.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		2C54721B1388BF55007B8E64 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 089C1669FE841209C02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D202CE80486D31800D8A456;
+			remoteInfo = mongo;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2C79991513861C8E000F1A2E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2C79991913861CF7000F1A2E /* Sparkle.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		089C1672FE841209C02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		2C073804117618F100452AFE /* MIT-LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "MIT-LICENSE"; sourceTree = "<group>"; };
-		2C0738061176190300452AFE /* README.textile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.textile; sourceTree = "<group>"; };
 		2C62ECAC1173C84500F27B65 /* logo-mongodb-onwhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-mongodb-onwhite.png"; sourceTree = "<group>"; };
 		2C62ECB51173CD8200F27B65 /* mongo.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mongo.icns; sourceTree = "<group>"; };
 		2C62ECBE1173CEA800F27B65 /* mongoPref.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = mongoPref.tiff; sourceTree = "<group>"; };
@@ -45,6 +82,8 @@
 		2C62ECC81173CFA500F27B65 /* switcher-text-on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "switcher-text-on.png"; sourceTree = "<group>"; };
 		2C62EDFA117425F700F27B65 /* DaemonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DaemonController.h; sourceTree = "<group>"; };
 		2C62EDFB117425F700F27B65 /* DaemonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DaemonController.m; sourceTree = "<group>"; wrapsLines = 1; };
+		2C79991713861CEA000F1A2E /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Lib/Sparkle.framework; sourceTree = "<group>"; };
+		2C79991A138622A5000F1A2E /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		2CD23D0911BC6AA2005B6619 /* MBSliderButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBSliderButton.h; sourceTree = "<group>"; };
 		2CD23D0A11BC6AA2005B6619 /* MBSliderButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBSliderButton.m; sourceTree = "<group>"; };
 		2CD23D3F11BC7082005B6619 /* button_surround.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_surround.png; sourceTree = "<group>"; };
@@ -67,6 +106,7 @@
 			files = (
 				8D202CF30486D31800D8A456 /* Cocoa.framework in Frameworks */,
 				8D202CF40486D31800D8A456 /* PreferencePanes.framework in Frameworks */,
+				2C79991813861CEA000F1A2E /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,8 +116,6 @@
 		089C166AFE841209C02AAC07 /* mongo */ = {
 			isa = PBXGroup;
 			children = (
-				2C073804117618F100452AFE /* MIT-LICENSE */,
-				2C0738061176190300452AFE /* README.textile */,
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				32DBCFA10370C40200C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
@@ -99,6 +137,7 @@
 		089C167CFE841241C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				2C79991A138622A5000F1A2E /* dsa_pub.pem */,
 				2CD23D3F11BC7082005B6619 /* button_surround.png */,
 				2CD23D4011BC7082005B6619 /* button_knob.png */,
 				2C62ECC61173CFA500F27B65 /* switcher-text-off.png */,
@@ -131,6 +170,7 @@
 		1058C7ACFEA557BF11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2C79991713861CEA000F1A2E /* Sparkle.framework */,
 				1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */,
 				F506C035013D953901CA16C8 /* PreferencePanes.framework */,
 			);
@@ -189,6 +229,7 @@
 				8D202CF00486D31800D8A456 /* Sources */,
 				8D202CF20486D31800D8A456 /* Frameworks */,
 				8D202CF50486D31800D8A456 /* Rez */,
+				2C79991513861C8E000F1A2E /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -220,6 +261,7 @@
 			projectRoot = "";
 			targets = (
 				8D202CE80486D31800D8A456 /* mongo */,
+				2C5472171388BF4E007B8E64 /* Distribution */,
 			);
 		};
 /* End PBXProject section */
@@ -236,10 +278,9 @@
 				2C62ECBF1173CEA800F27B65 /* mongoPref.tiff in Resources */,
 				2C62ECCD1173CFA500F27B65 /* switcher-text-off.png in Resources */,
 				2C62ECCF1173CFA500F27B65 /* switcher-text-on.png in Resources */,
-				2C073805117618F100452AFE /* MIT-LICENSE in Resources */,
-				2C0738071176190300452AFE /* README.textile in Resources */,
 				2CD23D4111BC7082005B6619 /* button_surround.png in Resources */,
 				2CD23D4211BC7082005B6619 /* button_knob.png in Resources */,
+				2C79991B138622A5000F1A2E /* dsa_pub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,6 +296,22 @@
 		};
 /* End PBXRezBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		2C54721D1388BF57007B8E64 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "set -o errexit\n\n[ $BUILD_STYLE = Release ] || { echo Distribution target requires \"'Release'\" build style; false; }\n\nPREF_PANE_NAME=\"mongo.prefPane\"\n\nVERSION=$(defaults read \"$BUILT_PRODUCTS_DIR/$PREF_PANE_NAME/Contents/Info\" CFBundleVersion)\nDOWNLOAD_BASE_URL=\"http://github.com/downloads/ivanvc/mongodb-prefpane\"\nRELEASENOTES_URL=\"http://ivanvc.github.com/mongodb-prefpane/release-notes.html#version-$VERSION\"\n\nARCHIVE_FILENAME=\"$PROJECT_NAME $VERSION.zip\"\nDOWNLOAD_URL=\"$DOWNLOAD_BASE_URL/$ARCHIVE_FILENAME\"\nKEYCHAIN_PRIVKEY_NAME=\"mongo-prefPane Private Key\"\n\n#WD=$PWD\ncd \"$BUILT_PRODUCTS_DIR\"\nrm -f \"$PREF_PANE_NAME\"*.zip\nditto -ck --keepParent \"$PREF_PANE_NAME\" \"$ARCHIVE_FILENAME\"\n\nSIZE=$(stat -f %z \"$ARCHIVE_FILENAME\")\nPUBDATE=$(LC_TIME=en_US date +\"%a, %d %b %G %T %z\")\nSIGNATURE=$(\nopenssl dgst -sha1 -binary < \"$ARCHIVE_FILENAME\" \\\n| openssl dgst -dss1 -sign <(security find-generic-password -g -l \"$KEYCHAIN_PRIVKEY_NAME\" 2>&1 1>/dev/null | perl -pe '($_) = /\"(.+)\"/; s/\\\\012/\\n/g' | ruby -e \"puts STDIN.readlines.join.match(/<string>(.*)<\\/string>/m)[1]\") \\\n| openssl enc -base64\n)\n\n[ $SIGNATURE ] || { echo Unable to load signing private key with name \"'$KEYCHAIN_PRIVKEY_NAME'\" from keychain; false; }\n\ncat <<EOF > appcastnode.xml\n<item>\n<title>Version $VERSION</title>\n<sparkle:releaseNotesLink>$RELEASENOTES_URL</sparkle:releaseNotesLink>\n<pubDate>$PUBDATE</pubDate>\n<enclosure\nurl=\"$DOWNLOAD_URL\"\nsparkle:version=\"$VERSION\"\ntype=\"application/octet-stream\"\nlength=\"$SIZE\"\nsparkle:dsaSignature=\"$SIGNATURE\"\n/>\n</item>\nEOF\n\nopen $BUILT_PRODUCTS_DIR";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8D202CF00486D31800D8A456 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -268,6 +325,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		2C54721C1388BF55007B8E64 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8D202CE80486D31800D8A456 /* mongo */;
+			targetProxy = 2C54721B1388BF55007B8E64 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		089C167DFE841241C02AAC07 /* InfoPlist.strings */ = {
@@ -297,7 +362,8 @@
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../CocoaMondoKit 1.1\"",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/Lib\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -319,7 +385,8 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../CocoaMondoKit 1.1\"",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/Lib\"",
 				);
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -360,6 +427,22 @@
 			};
 			name = Release;
 		};
+		2C5472191388BF4E007B8E64 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2C54721A1388BF4E007B8E64 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -380,6 +463,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		2C5472181388BF4E007B8E64 /* Build configuration list for PBXAggregateTarget "Distribution" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C5472191388BF4E007B8E64 /* Debug */,
+				2C54721A1388BF4E007B8E64 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};
