@@ -12,6 +12,7 @@
   NSTableView *tableView;
 @private
   NSMutableArray *arguments;
+  NSMutableArray *parameters;
 }
 
 @property (nonatomic, retain) IBOutlet NSTableView *tableView;

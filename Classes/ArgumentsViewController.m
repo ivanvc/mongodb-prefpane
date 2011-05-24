@@ -10,12 +10,14 @@
 
 @interface ArgumentsViewController(/* Hidden Methods*/)
 @property (nonatomic, retain) NSMutableArray *arguments;
+@property (nonatomic, retain) NSMutableArray *parameters;
 - (void)removeArgument:(id)sender;
 @end
 
 @implementation ArgumentsViewController
 @synthesize tableView;
 @synthesize arguments;
+@synthesize parameters;
 
 #pragma mark - Initialization
 
@@ -23,6 +25,7 @@
   self = [super initWithCoder:aDecoder];
   if (self) {
     self.arguments = [NSMutableArray array];
+    self.parameters = [NSMutableArray array];
   }
 
   return self;
@@ -38,7 +41,7 @@
   if ([[tableColumn identifier] isEqualToString:@"argumentColumn"])
     return [arguments objectAtIndex:row];
   if ([[tableColumn identifier] isEqualToString:@"parametersColumn"])
-    return @"parameter";
+    return [parameters objectAtIndex:row];
 //  if ([[tableColumn identifier] isEqualToString:@"deleteColumn"])
 //    return @"-";
 
@@ -48,6 +51,8 @@
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
   if ([[tableColumn identifier] isEqualToString:@"argumentColumn"])
     [arguments replaceObjectAtIndex:row withObject:(NSString *)object];
+  if ([[tableColumn identifier] isEqualToString:@"parametersColumn"])
+    [parameters replaceObjectAtIndex:row withObject:(NSString *)object];
 }
 
 - (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -73,11 +78,13 @@
 
 - (void)removeArgument:(id)sender {
   [arguments removeObjectAtIndex:[tableView selectedRow]];
+  [parameters removeObjectAtIndex:[tableView selectedRow]];
   [self.tableView reloadData];
 }
 
 - (IBAction)addRow:(id)sender {
   [arguments addObject:[NSString stringWithFormat:@"Object %d", [arguments count]]];
+  [parameters addObject:[NSString stringWithFormat:@"Object %d", [parameters count]]];
   [self.tableView reloadData];
 }
 
@@ -85,6 +92,7 @@
 
 - (void)dealloc {
   [tableView release];
+  [parameters release];
   [arguments release];
 
   [super dealloc];
