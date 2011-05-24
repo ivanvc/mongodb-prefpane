@@ -22,6 +22,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2C3D51D4138B535E0060BA1E /* defaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2C3D51D3138B535E0060BA1E /* defaultPreferences.plist */; };
+		2C3D51D7138B53E20060BA1E /* Preferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C3D51D5138B53E20060BA1E /* Preferences.h */; };
+		2C3D51D8138B53E20060BA1E /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3D51D6138B53E20060BA1E /* Preferences.m */; };
 		2C62ECAD1173C84500F27B65 /* logo-mongodb-onwhite.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECAC1173C84500F27B65 /* logo-mongodb-onwhite.png */; };
 		2C62ECB61173CD8200F27B65 /* mongo.icns in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECB51173CD8200F27B65 /* mongo.icns */; };
 		2C62ECBF1173CEA800F27B65 /* mongoPref.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECBE1173CEA800F27B65 /* mongoPref.tiff */; };
@@ -75,6 +78,9 @@
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		2C3D51D3138B535E0060BA1E /* defaultPreferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = defaultPreferences.plist; sourceTree = "<group>"; };
+		2C3D51D5138B53E20060BA1E /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
+		2C3D51D6138B53E20060BA1E /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
 		2C62ECAC1173C84500F27B65 /* logo-mongodb-onwhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-mongodb-onwhite.png"; sourceTree = "<group>"; };
 		2C62ECB51173CD8200F27B65 /* mongo.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = mongo.icns; sourceTree = "<group>"; };
 		2C62ECBE1173CEA800F27B65 /* mongoPref.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = mongoPref.tiff; sourceTree = "<group>"; };
@@ -148,6 +154,7 @@
 				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
 				2C62ECAC1173C84500F27B65 /* logo-mongodb-onwhite.png */,
 				F506C042013D9D8C01CA16C8 /* mongoPref.xib */,
+				2C3D51D3138B535E0060BA1E /* defaultPreferences.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -163,6 +170,8 @@
 				2CD23D0A11BC6AA2005B6619 /* MBSliderButton.m */,
 				2CD9EB3B1384C231001BE97E /* ArgumentsViewController.h */,
 				2CD9EB3C1384C231001BE97E /* ArgumentsViewController.m */,
+				2C3D51D5138B53E20060BA1E /* Preferences.h */,
+				2C3D51D6138B53E20060BA1E /* Preferences.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -214,6 +223,7 @@
 				2C62EDFC117425F700F27B65 /* DaemonController.h in Headers */,
 				2CD23D0B11BC6AA2005B6619 /* MBSliderButton.h in Headers */,
 				2CD9EB3E1384C231001BE97E /* ArgumentsViewController.h in Headers */,
+				2C3D51D7138B53E20060BA1E /* Preferences.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -281,6 +291,7 @@
 				2CD23D4111BC7082005B6619 /* button_surround.png in Resources */,
 				2CD23D4211BC7082005B6619 /* button_knob.png in Resources */,
 				2C79991B138622A5000F1A2E /* dsa_pub.pem in Resources */,
+				2C3D51D4138B535E0060BA1E /* defaultPreferences.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -321,6 +332,7 @@
 				2C62EDFD117425F700F27B65 /* DaemonController.m in Sources */,
 				2CD23D0C11BC6AA2005B6619 /* MBSliderButton.m in Sources */,
 				2CD9EB3F1384C231001BE97E /* ArgumentsViewController.m in Sources */,
+				2C3D51D8138B53E20060BA1E /* Preferences.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
