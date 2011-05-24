@@ -9,6 +9,7 @@
 #import "mongoPref.h"
 #import "MBSliderButton.h"
 #import "DaemonController.h"
+#import "Preferences.h"
 #import "Sparkle/Sparkle.h"
 
 @interface mongoPref(/* Hidden Methods */)
@@ -22,6 +23,15 @@
 @synthesize theSlider;
 @synthesize theArguments;
 @synthesize updater;
+
+- (id)initWithBundle:(NSBundle *)bundle {
+  self = [super initWithBundle:bundle];
+  if (self) {
+    [[Preferences sharedPreferences] setBundle:bundle];
+  }
+
+  return self;
+}
 
 - (void) mainViewDidLoad {
   self.updater = [SUUpdater updaterForBundle:[NSBundle bundleForClass:[self class]]];
