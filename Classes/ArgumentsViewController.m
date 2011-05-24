@@ -7,11 +7,13 @@
 //
 
 #import "ArgumentsViewController.h"
+#import "Preferences.h"
 
 @interface ArgumentsViewController(/* Hidden Methods*/)
 @property (nonatomic, retain) NSMutableArray *arguments;
 @property (nonatomic, retain) NSMutableArray *parameters;
 - (void)removeArgument:(id)sender;
+- (void)updatePreferences;
 @end
 
 @implementation ArgumentsViewController
@@ -24,11 +26,18 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if (self) {
-    self.arguments = [NSMutableArray array];
-    self.parameters = [NSMutableArray array];
+    self.arguments  = [NSMutableArray arrayWithArray:[[[Preferences sharedPreferences] preferences] objectForKey:@"arguments"]];
+    self.parameters = [NSMutableArray arrayWithArray:[[[Preferences sharedPreferences] preferences] objectForKey:@"parameters"]];
   }
 
   return self;
+}
+
+#pragma mark - Preferences management
+
+- (void)updatePreferences {
+  [[[Preferences sharedPreferences] preferences] setObject:[NSArray arrayWithArray:arguments] forKey:@"arguments"];
+  [[[Preferences sharedPreferences] preferences] setObject:[NSArray arrayWithArray:parameters] forKey:@"parameters"];
 }
 
 #pragma mark - Table View Tasks
@@ -42,8 +51,6 @@
     return [arguments objectAtIndex:row];
   if ([[tableColumn identifier] isEqualToString:@"parametersColumn"])
     return [parameters objectAtIndex:row];
-//  if ([[tableColumn identifier] isEqualToString:@"deleteColumn"])
-//    return @"-";
 
   return nil;
 }
@@ -53,6 +60,8 @@
     [arguments replaceObjectAtIndex:row withObject:(NSString *)object];
   if ([[tableColumn identifier] isEqualToString:@"parametersColumn"])
     [parameters replaceObjectAtIndex:row withObject:(NSString *)object];
+
+  [self updatePreferences];
 }
 
 - (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
@@ -79,12 +88,15 @@
 - (void)removeArgument:(id)sender {
   [arguments removeObjectAtIndex:[tableView selectedRow]];
   [parameters removeObjectAtIndex:[tableView selectedRow]];
+
+  [self updatePreferences];
   [self.tableView reloadData];
 }
 
 - (IBAction)addRow:(id)sender {
-  [arguments addObject:[NSString stringWithFormat:@"Object %d", [arguments count]]];
-  [parameters addObject:[NSString stringWithFormat:@"Object %d", [parameters count]]];
+  [arguments addObject:[NSString stringWithFormat:@"-argument", [arguments count]]];
+  [parameters addObject:[NSString stringWithFormat:@"parameter", [parameters count]]];
+
   [self.tableView reloadData];
 }
 
