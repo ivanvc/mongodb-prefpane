@@ -324,7 +324,6 @@
 												<reference key="NSSupport" ref="37368513"/>
 												<reference key="NSControlView" ref="1045326488"/>
 												<bool key="NSDrawsBackground">YES</bool>
-												<int key="NSTextBezelStyle">1</int>
 												<reference key="NSBackgroundColor" ref="996991262"/>
 												<reference key="NSTextColor" ref="704775507"/>
 											</object>
@@ -606,7 +605,7 @@
 															<string key="NSFrame">{{303, 17}, {15, 64}}</string>
 															<reference key="NSSuperview" ref="548317551"/>
 															<reference key="NSWindow"/>
-															<reference key="NSNextKeyView" ref="588413210"/>
+															<reference key="NSNextKeyView" ref="159715755"/>
 															<int key="NSViewLayerContentsRedrawPolicy">2</int>
 															<reference key="NSTarget" ref="548317551"/>
 															<string key="NSAction">_doScroller:</string>
@@ -618,7 +617,7 @@
 															<string key="NSFrame">{{-100, -100}, {302, 15}}</string>
 															<reference key="NSSuperview" ref="548317551"/>
 															<reference key="NSWindow"/>
-															<reference key="NSNextKeyView" ref="159715755"/>
+															<reference key="NSNextKeyView" ref="13388912"/>
 															<int key="NSViewLayerContentsRedrawPolicy">2</int>
 															<int key="NSsFlags">1</int>
 															<reference key="NSTarget" ref="548317551"/>
@@ -646,7 +645,7 @@
 													<string key="NSFrame">{{14, 13}, {319, 82}}</string>
 													<reference key="NSSuperview" ref="765648594"/>
 													<reference key="NSWindow"/>
-													<reference key="NSNextKeyView" ref="13388912"/>
+													<reference key="NSNextKeyView" ref="588413210"/>
 													<int key="NSViewLayerContentsRedrawPolicy">2</int>
 													<int key="NSsFlags">18</int>
 													<reference key="NSVScroller" ref="234765737"/>
