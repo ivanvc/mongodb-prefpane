@@ -27,7 +27,6 @@ If you need to set extra parameters to run mongod, then edit the Arguments textb
 In development...
 -----------------
 
-* Sparkle framework to do auto updates (SOON)
 * Redifined UI
   * Managing arguments is going to be nicer (not a simple text field)
   * Locating of the binary using a NSOpenPanel
