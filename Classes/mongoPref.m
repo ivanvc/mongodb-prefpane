@@ -21,7 +21,6 @@
 
 @implementation mongoPref
 @synthesize theSlider;
-@synthesize theArguments;
 @synthesize updater;
 
 - (id)initWithBundle:(NSBundle *)bundle {
@@ -36,14 +35,9 @@
 - (void) mainViewDidLoad {
   self.updater = [SUUpdater updaterForBundle:[NSBundle bundleForClass:[self class]]];
   [updater resetUpdateCycle];
-  dC = [[DaemonController alloc] initWithDelegate:self andArguments:[theArguments stringValue]];
+  dC = [[DaemonController alloc] initWithDelegate:self];
 
-  [theSlider setState:[dC isRunning] ? NSOnState : NSOffState];
-  
-  preferences	= [[NSUserDefaults standardUserDefaults] retain];
-  preferencesDict = [NSDictionary dictionaryWithObjectsAndKeys:@"", @"arguments", nil];
-  [preferences registerDefaults:preferencesDict];
-  [theArguments setStringValue:[preferences objectForKey:@"arguments"]];
+  [theSlider setState:[dC isRunning] ? NSOnState : NSOffState];  
 }
 
 - (void) daemonStopped;
@@ -56,12 +50,9 @@
   [theSlider setState:NSOnState animate:YES];
 }
 
-- (void) dealloc;
-{
+- (void) dealloc {
   [updater release];
   [dC release];
-  [preferences release];
-  [preferencesDict release];
   [super dealloc];
 }
 
@@ -79,15 +70,10 @@
   if (theSlider.state == NSOffState) {
     [dC stop];
   } else {
-    [dC setArguments:[theArguments stringValue]];
+    dC.arguments = [[Preferences sharedPreferences] argumentsWithParameters];
     [dC start];
   }
   
-}
-
-- (IBAction) changeArguments:(id)sender;
-{
-  [preferences setObject:[theArguments stringValue] forKey:@"arguments"];
 }
 
 @end

@@ -25,7 +25,7 @@
 
 @property (nonatomic, retain) NSString *arguments;
 
--(id)initWithDelegate:(id)theDelegate andArguments:(NSString *)theArguments;
+- (id)initWithDelegate:(id)theDelegate;
 
 -(void)start;
 -(void)stop;

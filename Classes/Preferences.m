@@ -80,6 +80,19 @@ static Preferences *sharedPreferences = nil;
   }
 }
 
+- (NSString *)argumentsWithParameters {
+  NSMutableString *theArgumentsWithParameters = [NSMutableString string];
+
+  [[preferences objectForKey:@"arguments"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    NSString *argument  = obj;
+    if ([argument length] && [argument characterAtIndex:0] == '-') {
+      [theArgumentsWithParameters appendFormat:[NSString stringWithFormat:@"%@ %@ ", argument, [[preferences objectForKey:@"parameters"] objectAtIndex:idx]]];
+    }
+  }];
+
+  return [NSString stringWithString:theArgumentsWithParameters];
+}
+
 #pragma mark - Memory management
 
 - (void)dealloc {

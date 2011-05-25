@@ -6,8 +6,8 @@
 //  Modified by Iván Valdés
 //
 
-#import "DaemonController.h"
 #import <sys/sysctl.h>
+#import "DaemonController.h"
 
 /** returns the pid of the running playdar instance, or 0 if not found */
 static pid_t mongod_pid()
@@ -73,17 +73,18 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
 @implementation DaemonController
 @synthesize arguments;
 
--(id)initWithDelegate:(id)theDelegate andArguments:(NSString *)theArguments
-{
+- (id)initWithDelegate:(id)theDelegate {
+  if ((self = [super init])) {
     delegate = [theDelegate retain];
     location = @"";
-    [self setArguments:theArguments];
-    if(pid = mongod_pid())
-        kqueue_watch_pid(pid, self); // watch the pid for termination
-    else
-        START_POLL;
 
-    return self;
+    if((pid = mongod_pid()))
+      kqueue_watch_pid(pid, self); // watch the pid for termination
+    else
+      START_POLL;
+  }
+
+  return self;
 }
 
 -(bool)isRunning
@@ -151,17 +152,15 @@ static inline void kqueue_watch_pid(pid_t pid, id self)
     daemon_task = [[NSTask alloc] init];
 }
 
--(void)failedToStartDaemonTask
-{
-    NSMutableString* msg = [@"The file at “" mutableCopy];
-    [msg appendString:daemon_task.launchPath];
-    [msg appendString:@"” could not be executed."];
-    NSLog(@"Failed to start daemon %@ %i", msg);
+- (void)failedToStartDaemonTask {
+  NSMutableString *msg = [@"The file at “" mutableCopy];
+  [msg appendString:daemon_task.launchPath];
+  [msg appendString:@"” could not be executed."];
 
-    [delegate performSelector:@selector(daemonStopped)];
+  [delegate performSelector:@selector(daemonStopped)];
 
-    daemon_task = nil;
-    [msg release];
+  daemon_task = nil;
+  [msg release];
 }
 
 -(void)start

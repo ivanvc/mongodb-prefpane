@@ -15,20 +15,15 @@
 @interface mongoPref : NSPreferencePane {
   MBSliderButton   *theSlider;
   DaemonController *dC;
-  NSTextField      *theArguments;
-  NSUserDefaults   *preferences;
-  NSDictionary     *preferencesDict;
 @private
   SUUpdater        *updater;
 }
 
 @property (nonatomic, retain) IBOutlet MBSliderButton	*theSlider;
-@property (nonatomic, retain) IBOutlet NSTextField *theArguments;
 
-- (void) mainViewDidLoad;
-- (void) daemonStopped;
-- (void) daemonStarted;
-- (IBAction) startStopDaemon:(id)sender;
-- (IBAction) changeArguments:(id)sender;
+- (void)mainViewDidLoad;
+- (void)daemonStopped;
+- (void)daemonStarted;
+- (IBAction)startStopDaemon:(id)sender;
 
 @end
