@@ -15,6 +15,11 @@
 @property (nonatomic, retain) NSTask   *daemonTask;
 
 - (void)startPoll;
+- (void)daemonTerminated:(NSNotification*)notification;
+- (void)initDaemonTask;
+- (void)poll:(NSTimer*)timer;
+- (void)failedToStartDaemonTask:(NSString *)reason;
+- (void)checkReadyForDaemon;
 @end
 
 /** returns the pid of the running playdar instance, or 0 if not found */
@@ -74,25 +79,102 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
 }
 
 @implementation DaemonController
-@synthesize arguments;
-@synthesize location;
-@synthesize launchAgentPath;
-@synthesize delegate;
+@synthesize argumentsToStart;
+@synthesize argumentsToStop;
+@synthesize launchPath;
 
 @synthesize binaryName;
 @synthesize pollTimer;
 @synthesize daemonTask;
 
-- (id)initWithDelegate:(id)theDelegate {
-  if ((self = [super init])) {
-    self.delegate = theDelegate;
-  }
+@synthesize daemonStartedCallback;
+@synthesize daemonStoppedCallback;
+@synthesize daemonIsStartingCallback;
+@synthesize daemonIsStoppingCallback;
+@synthesize daemonFailedToStartCallback;
+@synthesize daemonFailedToStopCallback;
 
-  return self;
+#pragma mark - Daemon control tasks
+
+- (void)start {
+  @try {
+    [self initDaemonTask];
+    daemonTask.launchPath = launchPath;
+    if (argumentsToStart)
+      daemonTask.arguments = argumentsToStart;
+    else
+      daemonTask.arguments = [NSArray array];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(daemonTerminated:) name:NSTaskDidTerminateNotification object:daemonTask];
+    [daemonTask launch];
+    pid = daemonTask.processIdentifier;
+
+    [self performSelector:@selector(checkReadyForDaemon) withObject:nil afterDelay:0.2];
+  } @catch (NSException *exception) {
+    [self failedToStartDaemonTask:exception.reason];
+  }
 }
 
-- (BOOL)isRunning {
-  return ((pid = daemon_pid([binaryName UTF8String])) != 0);
+- (void)stop {
+  if (argumentsToStop) {
+    NSTask *task = [[[NSTask alloc] init] autorelease];
+    task.launchPath = launchPath;
+    // try to remove service first
+    task.arguments = argumentsToStop;
+
+    [task launch];
+    [task waitUntilExit];
+
+    // the kqueue event will tell us when the process exits
+    if (task.terminationStatus == 0) {
+      if (daemonIsStoppingCallback)
+        daemonIsStoppingCallback();
+
+      return;
+    }
+  }
+
+  // if we have it running, then terminate the daemon
+  if (daemonTask) {
+    [daemonTask terminate];
+
+    if (daemonIsStoppingCallback)
+      daemonIsStoppingCallback();
+  } else {
+    pid = daemon_pid([binaryName UTF8String]);
+    if ((pid = daemon_pid([binaryName UTF8String])) == 0) {
+      // actually we weren't even running in the first place
+      [self startPoll];
+      if (daemonStoppedCallback)
+        daemonStoppedCallback();
+    } else {
+      if (kill(pid, SIGTERM) == -1 && errno != ESRCH)
+        if (daemonFailedToStopCallback)
+          daemonFailedToStopCallback(@"Failed to stop and kill the daemon.");
+    }
+  }
+}
+
+- (NSNumber *)pid {
+  return [NSNumber numberWithInt:pid];
+}
+
+- (BOOL)running {
+  return [[self pid] boolValue];
+}
+
+#pragma mark - Internal Daemon Tasks
+
+- (void)initDaemonTask {
+  [pollTimer invalidate];
+  self.pollTimer = nil;
+
+  if (daemonIsStartingCallback)
+    daemonIsStartingCallback();
+
+  NSTask *task = [[NSTask alloc] init];
+  self.daemonTask = task;
+  [task release];
 }
 
 - (void)daemonTerminated:(NSNotification*)notification {
@@ -102,183 +184,78 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
   pid = 0;
 
   [self startPoll];
-  [delegate performSelector:@selector(daemonStopped)];
+  if (daemonStoppedCallback)
+    daemonStoppedCallback();
 }
 
-- (void)stop {
-  if (launchAgentPath) {
-    NSTask *task = [[NSTask alloc] init];
-    task.launchPath = @"/usr/bin/env";
-    // try to remove service first
-    task.arguments = [NSArray arrayWithObjects:@"launchctl", @"unload", [launchAgentPath stringByExpandingTildeInPath], nil];
-
-    [delegate performSelector:@selector(daemonStopped)];
-
-    [task launch];
-    [task waitUntilExit];
-    [task release];
-  }
-
-  // if we have it running, then terminate the daemon
-  if (daemonTask)
-    [daemonTask terminate];
-  else {
-    pid = daemon_pid([binaryName UTF8String]);
-    if (pid == 0) {
-      // actually we weren't even running in the first place
-      [self startPoll];
-      [delegate performSelector:@selector(daemonStopped)];
-    } else {
-      if (kill(pid, SIGTERM) == -1 && errno != ESRCH)
-        [delegate performSelector:@selector(daemonStarted)];
-      else
-        [delegate performSelector:@selector(daemonStopped)];
-    }
-  }
-}
-
--(void)initDaemonTask {
-  [pollTimer invalidate];
-  self.pollTimer = nil;
-
-  [delegate performSelector:@selector(daemonStarted)];
-
-  NSTask *task = [[NSTask alloc] init];
-  self.daemonTask = task;
-  [task release];
-}
-
-- (void)failedToStartDaemonTask {
-  //NSString *message = [NSString stringWithFormat:@"The file at \"%@\" could not be executed." daemonTask.launchPath];
-  [delegate performSelector:@selector(daemonStopped)];
+- (void)failedToStartDaemonTask:(NSString *)reason {
+  if (daemonFailedToStartCallback)
+    daemonFailedToStartCallback(reason);
 
   self.daemonTask = nil;
 }
 
-- (void)start {
-  @try {
-    [self initDaemonTask];
-    daemonTask.launchPath = location;
-    daemonTask.arguments = arguments;
-
-    [daemonTask launch];
-    [self startPoll];
-  } @catch (NSException *exception) {
-    NSLog(@"Exception %@", [exception reason]);
-    [self failedToStartDaemonTask];
-  }
+- (void)checkReadyForDaemon {
+  if ((pid = daemon_pid([binaryName UTF8String])) == 0)
+    [self performSelector:@selector(checkReadyForDaemon) withObject:nil afterDelay:0.2];
+  else if (daemonStartedCallback)
+    daemonStartedCallback(self.pid);
 }
 
-- (void)checkReadyForScan {
-  if (!pid) // started via Terminal route perhaps
-    fdref = kqueue_watch_pid(pid = daemon_pid([binaryName UTF8String]), self);
-  [delegate performSelector:@selector(daemonStarted)];
+- (void)startPoll {
+  if (pollTimer)
+    [pollTimer invalidate];
+
+  self.pollTimer = [NSTimer scheduledTimerWithTimeInterval:0.33 target:self selector:@selector(poll:) userInfo:nil repeats:true];
 }
 
-- (void)poll:(NSTimer*)t {
-  if ((pid = daemon_pid([binaryName UTF8String])) == 0) {
-    [delegate performSelector:@selector(daemonStopped)];
+- (void)poll:(NSTimer*)timer {
+  if ((pid = daemon_pid([binaryName UTF8String])) == 0)
     return;
-  }
 
-  [delegate performSelector:@selector(daemonStarted)];
+  if (daemonStartedCallback)
+    daemonStartedCallback(self.pid);
+
   [pollTimer invalidate];
   self.pollTimer = nil;
   fdref = kqueue_watch_pid(pid, self);
-  [self checkReadyForScan];
-}
-
-/////////////////////////////////////////////////////////////////////////// misc
-//-(int)numFiles
-//{
-//    NSTask* task = [[NSTask alloc] init];
-//    [task setLaunchPath:[self playdarctl]];
-//    [task setArguments:[NSArray arrayWithObject:@"numfiles"]];
-//    [task setStandardOutput:[NSPipe pipe]];
-//    [task launch];
-//    [task waitUntilExit];
-//
-//    // if not zero then we library module isn't ready yet
-//    if (task.terminationStatus != 0)
-//        return -1;
-//
-//    NSData* data = [[[task standardOutput] fileHandleForReading] readDataToEndOfFile];
-//    return [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] intValue];
-//}
-
-//- (BOOL)locateBinary {
-//    NSFileManager *fileManager = [NSFileManager defaultManager];
-//    if (![location isEqualTo:nil] && ![location isEqualToString:@""]) {
-//        return YES;
-//    }
-//    if([fileManager fileExistsAtPath:@"/usr/local/bin/mongod"]) {
-//        location = @"/usr/local/bin/mongod";
-//    } else if ([fileManager fileExistsAtPath:@"/usr/bin/mongod"]) {
-//        location = @"/usr/bin/mongod";
-//    } else if ([fileManager fileExistsAtPath:@"/bin/mongod"]) {
-//        location = @"/bin/mongod";
-//    } else if ([fileManager fileExistsAtPath:@"/opt/bin/mongod"]) {
-//        location = @"/opt/bin/mongod";
-//    } else if ([fileManager fileExistsAtPath:MONGOD_LOCATION]) {
-//        location = MONGOD_LOCATION;
-//    } else {
-//        return NO;
-//    }
-//    return YES;
-//}
-
-- (void)startPoll {
-  self.pollTimer = [NSTimer scheduledTimerWithTimeInterval:0.33 target:self selector:@selector(poll:) userInfo:nil repeats:true];
 }
 
 #pragma mark - Custom Setters and Getters
 
-- (void)setLocation:(NSString *)theLocation {
-  if (location != theLocation) {
+- (void)setLaunchPath:(NSString *)theLaunchPath {
+  if (launchPath != theLaunchPath) {
     if (pollTimer)
       [pollTimer invalidate];
     if (fdref != NULL)
       CFFileDescriptorDisableCallBacks(fdref, kCFFileDescriptorReadCallBack);
 
-    [location release];
-    location = [theLocation retain];
-    self.binaryName = [location lastPathComponent];
+    [launchPath release];
+    launchPath = [theLaunchPath retain];
+    self.binaryName = [launchPath lastPathComponent];
 
-    if (location) {
-      if ((pid = daemon_pid([binaryName UTF8String])))
-        fdref = kqueue_watch_pid(pid, self); // watch the pid for termination
-      else
-        [self startPoll];
-    }
+    if (launchPath)
+      [self startPoll];
   }
-}
-
-- (void)setLaunchAgentPath:(NSString *)theLaunchAgentPath {
-  if (launchAgentPath != theLaunchAgentPath) {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-
-    [launchAgentPath release];
-    if ([fileManager fileExistsAtPath:theLaunchAgentPath])
-      launchAgentPath = [theLaunchAgentPath retain];
-    else if ([fileManager fileExistsAtPath:[[@"~/Library/LaunchAgents" stringByAppendingPathComponent:theLaunchAgentPath] stringByExpandingTildeInPath]])
-      launchAgentPath = [[[@"~/Library/LaunchAgents" stringByAppendingPathComponent:theLaunchAgentPath] stringByExpandingTildeInPath] retain];
-  }
-}
-
-- (NSNumber *)pid {
-  return [NSNumber numberWithInt:pid];
 }
 
 #pragma mark - Memory Management
 
 - (void)dealloc {
-  [arguments release];
-  [location release];
-  [launchAgentPath release];
+  [argumentsToStart release];
+  [argumentsToStop release];
+  [launchPath release];
 
   [binaryName release];
   [pollTimer release];
   [daemonTask release];
+
+  [daemonStartedCallback release];
+  [daemonStoppedCallback release];
+  [daemonIsStartingCallback release];
+  [daemonFailedToStartCallback release];
+  [daemonIsStoppingCallback release];
+  [daemonFailedToStopCallback release];
 
   [super dealloc];
 }

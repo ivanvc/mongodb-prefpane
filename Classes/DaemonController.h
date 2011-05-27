@@ -8,12 +8,25 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface DaemonController : NSObject {
-  id delegate;
+typedef void (^DaemonStarted)(NSNumber *);
+typedef void (^DaemonStopped)();
+typedef void (^DaemonNotRunning)();
+typedef void (^DaemonIsStarting)();
+typedef void (^DaemonIsStopping)();
+typedef void (^DaemonFailedToStart)(NSString *);
+typedef void (^DaemonFailedToStop)(NSString *);
 
-  NSArray  *arguments;
-  NSString *location;
-  NSString *launchAgentPath;
+@interface DaemonController : NSObject {
+  NSArray  *argumentsToStart;
+  NSArray  *argumentsToStop;
+  NSString *launchPath;
+
+  DaemonStarted daemonStartedCallback;
+  DaemonStopped daemonStoppedCallback;
+  DaemonIsStarting daemonIsStartingCallback;
+  DaemonIsStopping daemonIsStoppingCallback;
+  DaemonFailedToStart daemonFailedToStartCallback;
+  DaemonFailedToStop daemonFailedToStopCallback;
 
 @private
   NSString *binaryName;
@@ -24,20 +37,24 @@
   CFFileDescriptorRef fdref;
 }
 
-@property (nonatomic, retain) NSArray *arguments;
-@property (nonatomic, retain) NSString *location;
-@property (nonatomic, retain) NSString *launchAgentPath;
-@property (nonatomic, assign) id delegate;
-@property (readonly, getter = pid) NSNumber *pid;
+@property (nonatomic, retain) NSArray *argumentsToStart;
+@property (nonatomic, retain) NSArray *argumentsToStop;
+@property (nonatomic, retain) NSString *launchPath;
 
-- (id)initWithDelegate:(id)theDelegate;
+@property (readonly, getter = pid) NSNumber *pid;
+@property (readonly, getter = running) BOOL isRunning;
+
+@property (readwrite, copy) DaemonStarted daemonStartedCallback;
+@property (readwrite, copy) DaemonStopped daemonStoppedCallback;
+@property (readwrite, copy) DaemonIsStarting daemonIsStartingCallback;
+@property (readwrite, copy) DaemonIsStopping daemonIsStoppingCallback;
+@property (readwrite, copy) DaemonFailedToStart daemonFailedToStartCallback;
+@property (readwrite, copy) DaemonFailedToStop daemonFailedToStopCallback;
 
 - (void)start;
 - (void)stop;
 
-//- (BOOL)locateBinary;
-
-- (BOOL)isRunning;
+- (BOOL)running;
 - (NSNumber *)pid;
 
 @end
