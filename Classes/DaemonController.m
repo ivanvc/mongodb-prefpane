@@ -3,52 +3,54 @@
 //  Based in the one by [Max Howell](http://github.com/mxcl/playdar.prefpane).
 //
 
-/**
- * **DaemonController** is a tool to monit daemons using Objective C, that are
- * running in the system. The idea is to keep it simple, and provide methods to
- * start, and stop a given daemon. It also watches for the PID, in order to give
- * feedback about when the process is stopped by an external tool.
- *
- * #### Usage
- *
- * Just include the DaemonController.h file in your Class:
- *
- *     include "DaemonController.h";
- *
- * Then, create an instance of it
- *
- *     DaemonController *daemonController = [[DaemonController alloc]
- *       init];
- *
- * Set the launch path for the Daemon to watch:
- *
- *     daemonController.launchPath =
- *       @"/usr/local/Cellar/mysql/5.1.56/libexec/mysqld";
- *
- * Set the initialization arguments, if any:
- *
- *     daemonController.argumentsToStart = [NSArray arrayWithObjects:
- *       @"--basedir=/usr/local/Cellar/mysql/5.1.56",
- *       @"--datadir=/usr/local/var/mysql",
- *       @"--log-error=/usr/local/var/mysql/localjost.local.err",
- *       @"--pid-file=/usr/local/var/mysql/localjost.local.pid", nil];
- *
- * Finally,  there's an especial list of arguments in order to stop the daemon:
- *
- *     daemonController.argumentsToStop = [NSArrary arrayWithObjects:
- *       @"stop", nil];
- *
- * That's it. In order to get notifications about the status of the process, just set the
- * block callbacks for any operation you need. Please refer to the Callbacks section in order to
- * get more information on how to add them.
- *
- * To control the daemon, there are two simple tasks, start and stop. Please refer to the Daemon
- * Control Tasks for more information.
- */
+// **DaemonController** is a tool to monit daemons using Objective C, that are
+// running in the system. The idea is to keep it simple, and provide methods to
+// start, and stop a given daemon. It also watches for the PID, in order to give
+// feedback about when the process is stopped by an external tool.
+//
+// ## Usage
+//
+// Just include the DaemonController.h file in your Class:
+//
+//     include "DaemonController.h";
+//
+// Then, create an instance of it
+//
+//     DaemonController *daemonController = [[DaemonController alloc]
+//       init];
+//
+// Set the launch path for the Daemon to watch:
+//
+//     daemonController.launchPath =
+//       @"/usr/local/Cellar/mysql/5.1.56/libexec/mysqld";
+//
+// Set the initialization arguments, if any:
+//
+//     daemonController.startArguments = [NSArray arrayWithObjects:
+//       @"--basedir=/usr/local/Cellar/mysql/5.1.56",
+//       @"--datadir=/usr/local/var/mysql",
+//       @"--log-error=/usr/local/var/mysql/localjost.local.err",
+//       @"--pid-file=/usr/local/var/mysql/localjost.local.pid", nil];
+//
+// Finally,  there's an especial list of arguments in order to stop the daemon:
+//
+//     daemonController.stopArguments = [NSArrary arrayWithObjects:
+//       @"stop", nil];
+//
+// That's it. In order to get notifications about the status of the process, just set the
+// block callbacks for any operation you need. Please refer to the [Callbacks][cbs]
+// section in order to get more information on how to add them.
+//
+// To control the daemon, there are two simple tasks, start and stop. Please refer to the 
+// [Control Tasks][dct] for more information.
+//
+// [cbs]: #section-Callbacks
+// [dct]: #section-Control_Task
+
 #import <sys/sysctl.h>
 #import "DaemonController.h"
 
-// #### Hidden Methods
+// ## Hidden Methods
 // Here are the instance variables and methods used internally to control the Daemon.
 //
 // The binary name is stored in order to get the PID of the daemon.
@@ -64,13 +66,16 @@
 @property (nonatomic, retain) NSTask   *daemonTask;
 
 - (void)startPoll;
+- (void)daemonTerminatedFromQueue;
 - (void)daemonTerminated:(NSNotification*)notification;
 - (void)initDaemonTask;
 - (void)poll:(NSTimer*)timer;
 - (void)failedToStartDaemonTask:(NSString *)reason;
-- (void)checkReadyForDaemon;
+- (void)checkIfDaemonIsRunning;
 @end
 
+// ## C Methods
+//
 // Checks for the PID of a given daemon. If it's running, it will return the
 // PID. If not, it will return 0.
 static pid_t daemon_pid(const char *binary) {
@@ -82,7 +87,7 @@ static pid_t daemon_pid(const char *binary) {
   // Means that there are no running tasks. Very unlikely.
   if (sysctl(mib, 3, NULL, &totalTasks, NULL, 0) < 0)
     return 0;
-  // Won't able to allocate the memory. Unlikey.
+  // Not able to allocate the memory. Unlikey.
   if (!(info = NSZoneMalloc(NULL, totalTasks)))
     return 0;
   if (sysctl(mib, 3, info, &totalTasks, NULL, 0) >= 0) {
@@ -100,10 +105,15 @@ static pid_t daemon_pid(const char *binary) {
   return pid;
 }
 
+// Watches for termination of the process, doing a watch in its kernel event.
+// Calls daemonTerminatedFromQueue whenever it happens, as a CFFileDescriptor
+// provides just one callback, the call invalidates the current one.
 static void kqueue_termination_callback(CFFileDescriptorRef f, CFOptionFlags callBackTypes, void *self) {
-  [(id)self performSelector:@selector(daemonTerminated:)];
+  [(id)self performSelector:@selector(daemonTerminatedFromQueue)];
 }
 
+// Returns a CFFileDescriptor that is the reference for the callback whenever the status of
+// the process has changed.
 static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
   int                     kq;
   struct kevent           changes;
@@ -112,29 +122,32 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
 
   // Create the kqueue and set it up to watch for SIGCHLD. Use the
   // new-in-10.5 EV_RECEIPT flag to ensure that we get what we expect.
-
   kq = kqueue();
 
+  // Sets the kernel event watcher, to use the process id, and to notify when the
+  // process exits.
   EV_SET(&changes, pid, EVFILT_PROC, EV_ADD | EV_RECEIPT, NOTE_EXIT, 0, NULL);
-  (void) kevent(kq, &changes, 1, &changes, 1, NULL);
+  (void)kevent(kq, &changes, 1, &changes, 1, NULL);
 
   // Wrap the kqueue in a CFFileDescriptor (new in Mac OS X 10.5!). Then
   // create a run-loop source from the CFFileDescriptor and add that to the
   // runloop.
-
   CFFileDescriptorRef ref;
   ref = CFFileDescriptorCreate(NULL, kq, true, kqueue_termination_callback, &context);
   rls = CFFileDescriptorCreateRunLoopSource(NULL, ref, 0);
   CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopDefaultMode);
   CFRelease(rls);
 
+  // Enable the callback, and return the created CFFileDescriptor.
   CFFileDescriptorEnableCallBacks(ref, kCFFileDescriptorReadCallBack);
   return ref;
 }
 
+// ## Public properties
+// 
 @implementation DaemonController
-@synthesize argumentsToStart;
-@synthesize argumentsToStop;
+@synthesize startArguments;
+@synthesize stopArguments;
 @synthesize launchPath;
 
 @synthesize binaryName;
@@ -154,8 +167,8 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
   @try {
     [self initDaemonTask];
     daemonTask.launchPath = launchPath;
-    if (argumentsToStart)
-      daemonTask.arguments = argumentsToStart;
+    if (startArguments)
+      daemonTask.arguments = startArguments;
     else
       daemonTask.arguments = [NSArray array];
 
@@ -163,18 +176,18 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
     [daemonTask launch];
     pid = daemonTask.processIdentifier;
 
-    [self performSelector:@selector(checkReadyForDaemon) withObject:nil afterDelay:0.2];
+    [self performSelector:@selector(checkIfDaemonIsRunning) withObject:nil afterDelay:0.2];
   } @catch (NSException *exception) {
     [self failedToStartDaemonTask:exception.reason];
   }
 }
 
 - (void)stop {
-  if (argumentsToStop) {
+  if (stopArguments) {
     NSTask *task = [[[NSTask alloc] init] autorelease];
     task.launchPath = launchPath;
     // try to remove service first
-    task.arguments = argumentsToStop;
+    task.arguments = stopArguments;
 
     [task launch];
     [task waitUntilExit];
@@ -231,6 +244,11 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
   [task release];
 }
 
+- (void)daemonTerminatedFromQueue {
+  fdref = nil;
+  [self daemonTerminated:nil];
+}
+
 - (void)daemonTerminated:(NSNotification*)notification {
   [[NSNotificationCenter defaultCenter] removeObserver:self name:NSTaskDidTerminateNotification object:daemonTask];
 
@@ -249,9 +267,9 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
   self.daemonTask = nil;
 }
 
-- (void)checkReadyForDaemon {
+- (void)checkIfDaemonIsRunning {
   if ((pid = daemon_pid([binaryName UTF8String])) == 0)
-    [self performSelector:@selector(checkReadyForDaemon) withObject:nil afterDelay:0.2];
+    [self performSelector:@selector(checkIfDaemonIsRunning) withObject:nil afterDelay:0.2];
   else if (daemonStartedCallback)
     daemonStartedCallback(self.pid);
 }
@@ -296,8 +314,8 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
 #pragma mark - Memory Management
 
 - (void)dealloc {
-  [argumentsToStart release];
-  [argumentsToStop release];
+  [startArguments release];
+  [stopArguments release];
   [launchPath release];
 
   [binaryName release];

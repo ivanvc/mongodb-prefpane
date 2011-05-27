@@ -2,8 +2,8 @@
 //  DaemonController.h
 //  mongodb.prefpane
 //
-//  Created by Max Howell http://github.com/mxcl/playdar.prefpane
-//  Modified by Iván Valdés
+//  Based in DaemonController by Max Howell. Released under GNU GPL v3.
+//  Created by Ivan Valdes on 4/14/2010.
 //
 
 #import <Cocoa/Cocoa.h>
@@ -17,8 +17,8 @@ typedef void (^DaemonFailedToStart)(NSString *);
 typedef void (^DaemonFailedToStop)(NSString *);
 
 @interface DaemonController : NSObject {
-  NSArray  *argumentsToStart;
-  NSArray  *argumentsToStop;
+  NSArray  *startArguments;
+  NSArray  *stopArguments;
   NSString *launchPath;
 
   DaemonStarted daemonStartedCallback;
@@ -37,8 +37,8 @@ typedef void (^DaemonFailedToStop)(NSString *);
   CFFileDescriptorRef fdref;
 }
 
-@property (nonatomic, retain) NSArray *argumentsToStart;
-@property (nonatomic, retain) NSArray *argumentsToStop;
+@property (nonatomic, retain) NSArray *startArguments;
+@property (nonatomic, retain) NSArray *stopArguments;
 @property (nonatomic, retain) NSString *launchPath;
 
 @property (readonly, getter = pid) NSNumber *pid;
