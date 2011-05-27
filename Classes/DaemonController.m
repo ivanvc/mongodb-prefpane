@@ -41,11 +41,11 @@ static pid_t daemon_pid(const char *binary) {
   return pid;
 }
 
-static void kqueue_termination_callback(CFFileDescriptorRef f, CFOptionFlags callBackTypes, void* self) {
-  [(id)self performSelector:@selector(daemonStopped)];
+static void kqueue_termination_callback(CFFileDescriptorRef f, CFOptionFlags callBackTypes, void *self) {
+  [(id)self performSelector:@selector(daemonTerminated:)];
 }
 
-static inline void kqueue_watch_pid(pid_t pid, id self) {
+static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
   int                     kq;
   struct kevent           changes;
   CFFileDescriptorContext context = {0, self, NULL, NULL, NULL};
@@ -70,6 +70,7 @@ static inline void kqueue_watch_pid(pid_t pid, id self) {
   CFRelease(rls);
 
   CFFileDescriptorEnableCallBacks(ref, kCFFileDescriptorReadCallBack);
+  return ref;
 }
 
 @implementation DaemonController
@@ -122,13 +123,13 @@ static inline void kqueue_watch_pid(pid_t pid, id self) {
   if (daemonTask)
     [daemonTask terminate];
   else {
-    pid = daemon_pid([location UTF8String]);
+    pid = daemon_pid([binaryName UTF8String]);
     if (pid == 0) {
       // actually we weren't even running in the first place
       [self startPoll];
       [delegate performSelector:@selector(daemonStopped)];
     } else {
-      if (kill(pid, SIGHUP) == -1 && errno != ESRCH)
+      if (kill(pid, SIGTERM) == -1 && errno != ESRCH)
         [delegate performSelector:@selector(daemonStarted)];
       else
         [delegate performSelector:@selector(daemonStopped)];
@@ -170,12 +171,12 @@ static inline void kqueue_watch_pid(pid_t pid, id self) {
 
 - (void)checkReadyForScan {
   if (!pid) // started via Terminal route perhaps
-    kqueue_watch_pid(pid = daemon_pid([location UTF8String]), self);
+    fdref = kqueue_watch_pid(pid = daemon_pid([binaryName UTF8String]), self);
   [delegate performSelector:@selector(daemonStarted)];
 }
 
 - (void)poll:(NSTimer*)t {
-  if ((pid = daemon_pid([location UTF8String])) == 0) {
+  if ((pid = daemon_pid([binaryName UTF8String])) == 0) {
     [delegate performSelector:@selector(daemonStopped)];
     return;
   }
@@ -183,7 +184,7 @@ static inline void kqueue_watch_pid(pid_t pid, id self) {
   [delegate performSelector:@selector(daemonStarted)];
   [pollTimer invalidate];
   self.pollTimer = nil;
-  kqueue_watch_pid(pid, self);
+  fdref = kqueue_watch_pid(pid, self);
   [self checkReadyForScan];
 }
 
@@ -205,26 +206,26 @@ static inline void kqueue_watch_pid(pid_t pid, id self) {
 //    return [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] intValue];
 //}
 
-- (BOOL)locateBinary {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    if (![location isEqualTo:nil] && ![location isEqualToString:@""]) {
-        return YES;
-    }
-    if([fileManager fileExistsAtPath:@"/usr/local/bin/mongod"]) {
-        location = @"/usr/local/bin/mongod";
-    } else if ([fileManager fileExistsAtPath:@"/usr/bin/mongod"]) {
-        location = @"/usr/bin/mongod";
-    } else if ([fileManager fileExistsAtPath:@"/bin/mongod"]) {
-        location = @"/bin/mongod";
-    } else if ([fileManager fileExistsAtPath:@"/opt/bin/mongod"]) {
-        location = @"/opt/bin/mongod";
-    } else if ([fileManager fileExistsAtPath:MONGOD_LOCATION]) {
-        location = MONGOD_LOCATION;
-    } else {
-        return NO;
-    }
-    return YES;
-}
+//- (BOOL)locateBinary {
+//    NSFileManager *fileManager = [NSFileManager defaultManager];
+//    if (![location isEqualTo:nil] && ![location isEqualToString:@""]) {
+//        return YES;
+//    }
+//    if([fileManager fileExistsAtPath:@"/usr/local/bin/mongod"]) {
+//        location = @"/usr/local/bin/mongod";
+//    } else if ([fileManager fileExistsAtPath:@"/usr/bin/mongod"]) {
+//        location = @"/usr/bin/mongod";
+//    } else if ([fileManager fileExistsAtPath:@"/bin/mongod"]) {
+//        location = @"/bin/mongod";
+//    } else if ([fileManager fileExistsAtPath:@"/opt/bin/mongod"]) {
+//        location = @"/opt/bin/mongod";
+//    } else if ([fileManager fileExistsAtPath:MONGOD_LOCATION]) {
+//        location = MONGOD_LOCATION;
+//    } else {
+//        return NO;
+//    }
+//    return YES;
+//}
 
 - (void)startPoll {
   self.pollTimer = [NSTimer scheduledTimerWithTimeInterval:0.33 target:self selector:@selector(poll:) userInfo:nil repeats:true];
@@ -234,21 +235,38 @@ static inline void kqueue_watch_pid(pid_t pid, id self) {
 
 - (void)setLocation:(NSString *)theLocation {
   if (location != theLocation) {
-    if (pollTimer) {
+    if (pollTimer)
       [pollTimer invalidate];
-    }
+    if (fdref != NULL)
+      CFFileDescriptorDisableCallBacks(fdref, kCFFileDescriptorReadCallBack);
 
     [location release];
     location = [theLocation retain];
-    self.binaryName = [theLocation lastPathComponent];
+    self.binaryName = [location lastPathComponent];
 
     if (location) {
       if ((pid = daemon_pid([binaryName UTF8String])))
-        kqueue_watch_pid(pid, self); // watch the pid for termination
+        fdref = kqueue_watch_pid(pid, self); // watch the pid for termination
       else
         [self startPoll];
     }
   }
+}
+
+- (void)setLaunchAgentPath:(NSString *)theLaunchAgentPath {
+  if (launchAgentPath != theLaunchAgentPath) {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+
+    [launchAgentPath release];
+    if ([fileManager fileExistsAtPath:theLaunchAgentPath])
+      launchAgentPath = [theLaunchAgentPath retain];
+    else if ([fileManager fileExistsAtPath:[[@"~/Library/LaunchAgents" stringByAppendingPathComponent:theLaunchAgentPath] stringByExpandingTildeInPath]])
+      launchAgentPath = [[[@"~/Library/LaunchAgents" stringByAppendingPathComponent:theLaunchAgentPath] stringByExpandingTildeInPath] retain];
+  }
+}
+
+- (NSNumber *)pid {
+  return [NSNumber numberWithInt:pid];
 }
 
 #pragma mark - Memory Management
