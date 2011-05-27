@@ -1,14 +1,63 @@
 //
-//  DaemonController.m
-//  mongodb.prefpane
-//
-//  Created by Max Howell http://github.com/mxcl/playdar.prefpane
-//  Modified by Iván Valdés
+//  <!-- DaemonController -->
+//  Based in the one by [Max Howell](http://github.com/mxcl/playdar.prefpane).
 //
 
+/**
+ * **DaemonController** is a tool to monit daemons using Objective C, that are
+ * running in the system. The idea is to keep it simple, and provide methods to
+ * start, and stop a given daemon. It also watches for the PID, in order to give
+ * feedback about when the process is stopped by an external tool.
+ *
+ * #### Usage
+ *
+ * Just include the DaemonController.h file in your Class:
+ *
+ *     include "DaemonController.h";
+ *
+ * Then, create an instance of it
+ *
+ *     DaemonController *daemonController = [[DaemonController alloc]
+ *       init];
+ *
+ * Set the launch path for the Daemon to watch:
+ *
+ *     daemonController.launchPath =
+ *       @"/usr/local/Cellar/mysql/5.1.56/libexec/mysqld";
+ *
+ * Set the initialization arguments, if any:
+ *
+ *     daemonController.argumentsToStart = [NSArray arrayWithObjects:
+ *       @"--basedir=/usr/local/Cellar/mysql/5.1.56",
+ *       @"--datadir=/usr/local/var/mysql",
+ *       @"--log-error=/usr/local/var/mysql/localjost.local.err",
+ *       @"--pid-file=/usr/local/var/mysql/localjost.local.pid", nil];
+ *
+ * Finally,  there's an especial list of arguments in order to stop the daemon:
+ *
+ *     daemonController.argumentsToStop = [NSArrary arrayWithObjects:
+ *       @"stop", nil];
+ *
+ * That's it. In order to get notifications about the status of the process, just set the
+ * block callbacks for any operation you need. Please refer to the Callbacks section in order to
+ * get more information on how to add them.
+ *
+ * To control the daemon, there are two simple tasks, start and stop. Please refer to the Daemon
+ * Control Tasks for more information.
+ */
 #import <sys/sysctl.h>
 #import "DaemonController.h"
 
+// #### Hidden Methods
+// Here are the instance variables and methods used internally to control the Daemon.
+//
+// The binary name is stored in order to get the PID of the daemon.
+//
+// There's a reference to a poll timer, if it is not running yet, it will poll for it
+// until there's a running process of it.
+//
+// The daemon task holds the active task, in case that the daemon was initialized by us.
+//
 @interface DaemonController(/* Hidden Methods */)
 @property (nonatomic, retain) NSString *binaryName;
 @property (nonatomic, retain) NSTimer  *pollTimer;
@@ -22,20 +71,25 @@
 - (void)checkReadyForDaemon;
 @end
 
-/** returns the pid of the running playdar instance, or 0 if not found */
+// Checks for the PID of a given daemon. If it's running, it will return the
+// PID. If not, it will return 0.
 static pid_t daemon_pid(const char *binary) {
   int mib[4] = { CTL_KERN, KERN_PROC, KERN_PROC_ALL, 0 };
   struct kinfo_proc *info;
-  size_t N;
+  size_t totalTasks;
   pid_t pid = 0;
 
-  if (sysctl(mib, 3, NULL, &N, NULL, 0) < 0)
-    return 0; //wrong but unlikely
-  if (!(info = NSZoneMalloc(NULL, N)))
-    return 0; //wrong but unlikely
-  if (sysctl(mib, 3, info, &N, NULL, 0) >= 0) {
-    N = N / sizeof(struct kinfo_proc);
-    for(size_t i = 0; i < N; i++)
+  // Means that there are no running tasks. Very unlikely.
+  if (sysctl(mib, 3, NULL, &totalTasks, NULL, 0) < 0)
+    return 0;
+  // Won't able to allocate the memory. Unlikey.
+  if (!(info = NSZoneMalloc(NULL, totalTasks)))
+    return 0;
+  if (sysctl(mib, 3, info, &totalTasks, NULL, 0) >= 0) {
+    // Search for the process id that matches the name of our daemon.
+    totalTasks = totalTasks / sizeof(struct kinfo_proc);
+    for(size_t i = 0; i < totalTasks; i++)
+      // If found, store it in pid.
       if(strcmp(info[i].kp_proc.p_comm, binary) == 0) {
         pid = info[i].kp_proc.p_pid;
         break;
