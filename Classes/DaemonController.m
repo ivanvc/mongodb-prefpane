@@ -1,6 +1,6 @@
 //
 //  <!-- DaemonController -->
-//  Based in the one by [Max Howell](http://github.com/mxcl/playdar.prefpane).
+//  Based in *DaemonController* by [Max Howell](http://github.com/mxcl/playdar.prefpane).
 //
 
 // **DaemonController** is a tool to monit daemons using Objective C, that are
@@ -51,6 +51,7 @@
 #import "DaemonController.h"
 
 // ## Hidden Methods
+//
 // Here are the instance variables and methods used internally to control the Daemon.
 //
 // The binary name is stored in order to get the PID of the daemon.
@@ -144,20 +145,49 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
 }
 
 // ## Public properties
-// 
+//
+// There's three properties that are important in order to start, stop, run and monit
+// a daemon.
 @implementation DaemonController
-@synthesize startArguments;
-@synthesize stopArguments;
+// The launchPath is the daemon binary's absolute location.
 @synthesize launchPath;
+// If the daemon needs any special arguments to be started, this is the array where
+// they should be.
+@synthesize startArguments;
+// If it needs arguments to stop it, they should be in this array.
+@synthesize stopArguments;
 
+// ## Private properties
+//
+// The DaemonController, stores the name of the binary. It is needed in order to get its PID.
 @synthesize binaryName;
+// If the daemon is not running, the pollTimer will be executed until it starts. Then it will
+// be invalidated, and the watch will be switched to the process id observation.
 @synthesize pollTimer;
+// If we start the daemon, the task is stored in this property.
 @synthesize daemonTask;
 
+// ## Callbacks
+//
+// In order to notify about the status of the deamon, there are some defined blocks.
+// The definition of the blocks is the following:
+//     typedef void (^DaemonStarted)(NSNumber *);
+//     typedef void (^DaemonStopped)();
+//     typedef void (^DaemonIsStarting)();
+//     typedef void (^DaemonIsStopping)();
+//     typedef void (^DaemonFailedToStart)(NSString *);
+//     typedef void (^DaemonFailedToStop)(NSString *);
+//
+// Whenever the daemon is started this notification is called. The block receives an NSNumber,
+// this is the PID of the started daemon.
 @synthesize daemonStartedCallback;
+// When the daemon is stopped, this callback is called.
 @synthesize daemonStoppedCallback;
+// When the daemon is going to be started or stopped, these callbacks are called.
 @synthesize daemonIsStartingCallback;
 @synthesize daemonIsStoppingCallback;
+// When the daemon failes to start or stop, these callbacks are called, passing an NSString,
+// that contains the reason of the failure.
 @synthesize daemonFailedToStartCallback;
 @synthesize daemonFailedToStopCallback;
 
