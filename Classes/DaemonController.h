@@ -10,7 +10,6 @@
 
 typedef void (^DaemonStarted)(NSNumber *);
 typedef void (^DaemonStopped)();
-typedef void (^DaemonNotRunning)();
 typedef void (^DaemonIsStarting)();
 typedef void (^DaemonIsStopping)();
 typedef void (^DaemonFailedToStart)(NSString *);
