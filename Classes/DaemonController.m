@@ -3,11 +3,16 @@
 //  Based in *DaemonController* by [Max Howell](http://github.com/mxcl/playdar.prefpane).
 //
 
-// **DaemonController** is a tool to monit daemons using Objective C, that are
+// **DaemonController** is a tool to monitor daemons using Objective C, that are
 // running in the system. The idea is to keep it simple, and provide methods to
 // start, and stop a given daemon. It also watches for the PID, in order to give
 // feedback about when the process is stopped by an external tool.
+
+// ## Installation
 //
+// To install, just add the DaemonController.h and DaemonController.m files to your
+// project. Then, be shure to add DaemonController.m to your selected target.
+
 // ## Usage
 //
 // Just include the DaemonController.h file in your Class:
@@ -41,11 +46,11 @@
 // block callbacks for any operation you need. Please refer to the [Callbacks][cbs]
 // section in order to get more information on how to add them.
 //
-// To control the daemon, there are two simple tasks, start and stop. Please refer to the 
+// To control the daemon, there are two simple tasks, start and stop. Please refer to the
 // [Control Tasks][dct] for more information.
 //
 // [cbs]: #section-Callbacks
-// [dct]: #section-Control_Task
+// [dct]: #section-Control_Tasks
 
 #import <sys/sysctl.h>
 #import "DaemonController.h"
@@ -73,6 +78,7 @@
 - (void)poll:(NSTimer*)timer;
 - (void)failedToStartDaemonTask:(NSString *)reason;
 - (void)checkIfDaemonIsRunning;
+- (BOOL)didStopWithArguments;
 @end
 
 // ## C Methods
@@ -146,7 +152,7 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
 
 // ## Public properties
 //
-// There's three properties that are important in order to start, stop, run and monit
+// There's three properties that are important in order to start, stop, run and monitor
 // a daemon.
 @implementation DaemonController
 // The launchPath is the daemon binary's absolute location.
@@ -191,10 +197,18 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
 @synthesize daemonFailedToStartCallback;
 @synthesize daemonFailedToStopCallback;
 
+// ## Control Tasks
+//
+// These are the public methods, that control a daemon.
 #pragma mark - Daemon control tasks
 
+// Starts the daemon. Calls to daemonIsStartingCallback, and optionally to
+// daemonFailedToStartCallback if it failed to start, or daemonStartedCallback if it
+// successfully started.
 - (void)start {
   @try {
+    // Initialize the daemonTask. Set the launchPath to the one from the properties.
+    // If there are any launch arguments, then set them, else set an empty array.
     [self initDaemonTask];
     daemonTask.launchPath = launchPath;
     if (startArguments)
@@ -202,49 +216,50 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
     else
       daemonTask.arguments = [NSArray array];
 
+    // Observe the task for its termination.
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(daemonTerminated:) name:NSTaskDidTerminateNotification object:daemonTask];
     [daemonTask launch];
     pid = daemonTask.processIdentifier;
 
+    // Check that the daemon is up and running after a delay of 0.2s.
     [self performSelector:@selector(checkIfDaemonIsRunning) withObject:nil afterDelay:0.2];
   } @catch (NSException *exception) {
+    // If there's an exception while trying to initialize the daemon, then
+    // notify about the problem.
     [self failedToStartDaemonTask:exception.reason];
   }
 }
 
+// Stops the daemon. Calls to daemonIsStoppingCallback if there are arguments to stop the daemon.
+// Will call, daemonFailedToStopCallback if it failed to stop the daemon, or
+// daemonStoppedCallback if it was sucessfull.
 - (void)stop {
-  if (stopArguments) {
-    NSTask *task = [[[NSTask alloc] init] autorelease];
-    task.launchPath = launchPath;
-    // try to remove service first
-    task.arguments = stopArguments;
+  // First if there are stop arguments, then try to stop it.
+  if (stopArguments && [self didStopWithArguments]) {
+    if (daemonIsStoppingCallback)
+      daemonIsStoppingCallback();
 
-    [task launch];
-    [task waitUntilExit];
-
-    // the kqueue event will tell us when the process exits
-    if (task.terminationStatus == 0) {
-      if (daemonIsStoppingCallback)
-        daemonIsStoppingCallback();
-
-      return;
-    }
+    // The kqueue event will tell us eventually when the process exits.
+    return;
   }
 
-  // if we have it running, then terminate the daemon
+  // If we have it running, then terminate the task.
   if (daemonTask) {
     [daemonTask terminate];
 
     if (daemonIsStoppingCallback)
       daemonIsStoppingCallback();
   } else {
+    // If not, get the PID from the daemon.
     pid = daemon_pid([binaryName UTF8String]);
     if ((pid = daemon_pid([binaryName UTF8String])) == 0) {
-      // actually we weren't even running in the first place
+      // The daemon wasn't running, start the polling to check whenever it starts.
       [self startPoll];
       if (daemonStoppedCallback)
         daemonStoppedCallback();
     } else {
+      // If it is running, ans is not our task, and we don't have the arguments to stop it.
+      // Then kill it, if for some reason it fails, then call the appropiate callback.
       if (kill(pid, SIGTERM) == -1 && errno != ESRCH)
         if (daemonFailedToStopCallback)
           daemonFailedToStopCallback(@"Failed to stop and kill the daemon.");
@@ -252,14 +267,19 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
   }
 }
 
+// Returns the process id from the daemon, or 0 if not running.
 - (NSNumber *)pid {
   return [NSNumber numberWithInt:pid];
 }
 
+// Returns if the daemon is running.
 - (BOOL)running {
-  return [[self pid] boolValue];
+  return [self.pid boolValue];
 }
 
+// ## Internal Daemon Control Tasks
+//
+// The following are internal methods (a.k.a hidden methods) to keep control of the daemon.
 #pragma mark - Internal Daemon Tasks
 
 - (void)initDaemonTask {
@@ -323,6 +343,17 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
   fdref = kqueue_watch_pid(pid, self);
 }
 
+- (BOOL)didStopWithArguments {
+  NSTask *task = [[[NSTask alloc] init] autorelease];
+  task.launchPath = launchPath;
+  task.arguments = stopArguments;
+
+  [task launch];
+  [task waitUntilExit];
+
+  return task.terminationStatus == 0;
+}
+
 #pragma mark - Custom Setters and Getters
 
 - (void)setLaunchPath:(NSString *)theLaunchPath {
@@ -344,6 +375,8 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
 #pragma mark - Memory Management
 
 - (void)dealloc {
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+
   [startArguments release];
   [stopArguments release];
   [launchPath release];
