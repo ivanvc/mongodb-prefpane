@@ -1,5 +1,5 @@
 //
-//  <!-- DaemonController -->
+//  <!-- FFYDaemonController -->
 //  Based in *DaemonController* by [Max Howell](http://github.com/mxcl/playdar.prefpane).
 //
 
@@ -10,18 +10,18 @@
 
 // ## Installation
 //
-// To install, just add the DaemonController.h and DaemonController.m files to your
-// project. Then, be shure to add DaemonController.m to your selected target.
+// To install, just add the FFYDaemonController.h and FFYDaemonController.m files to your
+// project. Then, be shure to add FFYDaemonController.m to your selected target.
 
 // ## Usage
 //
-// Just include the DaemonController.h file in your Class:
+// Just include the FFYDaemonController.h file in your Class:
 //
-//     include "DaemonController.h";
+//     include "FFYDaemonController.h";
 //
 // Then, create an instance of it
 //
-//     DaemonController *daemonController = [[DaemonController alloc]
+//     FFYDaemonController *daemonController = [[FFYDaemonController alloc]
 //       init];
 //
 // Set the launch path for the Daemon to watch:
@@ -53,7 +53,7 @@
 // [dct]: #section-Control_Tasks
 
 #import <sys/sysctl.h>
-#import "DaemonController.h"
+#import "FFYDaemonController.h"
 
 // ## Hidden Methods
 //
@@ -66,7 +66,7 @@
 //
 // The daemon task holds the active task, in case that the daemon was initialized by us.
 //
-@interface DaemonController(/* Hidden Methods */)
+@interface FFYDaemonController(/* Hidden Methods */)
 @property (nonatomic, retain) NSString *binaryName;
 @property (nonatomic, retain) NSTimer  *pollTimer;
 @property (nonatomic, retain) NSTask   *daemonTask;
@@ -155,7 +155,7 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
 //
 // There's three properties that are important in order to start, stop, run and monitor
 // a daemon.
-@implementation DaemonController
+@implementation FFYDaemonController
 // The launchPath is the daemon binary's absolute location.
 @synthesize launchPath;
 // If the daemon needs any special arguments to be started, this is the array where

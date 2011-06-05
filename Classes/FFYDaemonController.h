@@ -1,5 +1,5 @@
 //
-//  DaemonController.h
+//  FFYDaemonController.h
 //  mongodb.prefpane
 //
 //  Based in DaemonController by Max Howell. Released under GNU GPL v3.
@@ -15,7 +15,7 @@ typedef void (^DaemonIsStopping)();
 typedef void (^DaemonFailedToStart)(NSString *);
 typedef void (^DaemonFailedToStop)(NSString *);
 
-@interface DaemonController : NSObject {
+@interface FFYDaemonController : NSObject {
   NSArray  *startArguments;
   NSArray  *stopArguments;
   NSString *launchPath;
