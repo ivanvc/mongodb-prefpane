@@ -70,6 +70,7 @@
 @property (nonatomic, retain) NSString *binaryName;
 @property (nonatomic, retain) NSTimer  *pollTimer;
 @property (nonatomic, retain) NSTask   *daemonTask;
+@property (nonatomic, retain) NSTimer  *checkStartupStatusTimer;
 
 - (void)startPoll;
 - (void)daemonTerminatedFromQueue;
@@ -172,6 +173,9 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
 @synthesize pollTimer;
 // If we start the daemon, the task is stored in this property.
 @synthesize daemonTask;
+// When the daemon is started, this timer is used to check when it really starts, assuming it
+// will take some time to start up.
+@synthesize checkStartupStatusTimer;
 
 // ## Callbacks
 //
@@ -221,8 +225,8 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
     [daemonTask launch];
     pid = daemonTask.processIdentifier;
 
-    // Check that the daemon is up and running after a delay of 0.2s.
-    [self performSelector:@selector(checkIfDaemonIsRunning) withObject:nil afterDelay:0.2];
+    // Continuosly check that the daemon is up and running after a delay of 0.2s.
+    self.checkStartupStatusTimer = [NSTimer scheduledTimerWithTimeInterval:0.2 target:self selector:@selector(checkIfDaemonIsRunning:) userInfo:nil repeats:true];
   } @catch (NSException *exception) {
     // If there's an exception while trying to initialize the daemon, then
     // notify about the problem.
@@ -318,10 +322,14 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
 }
 
 - (void)checkIfDaemonIsRunning {
-  if ((pid = daemon_pid([binaryName UTF8String])) == 0)
-    [self performSelector:@selector(checkIfDaemonIsRunning) withObject:nil afterDelay:0.2];
-  else if (daemonStartedCallback)
-    daemonStartedCallback(self.pid);
+  if ((pid = daemon_pid([binaryName UTF8String])) != 0) {
+    // Invalidate the timer, since it has been started.
+    [checkStartupStatusTimer invalidate];
+    self.checkStartupStatusTimer = nil;
+    // Called the proper callback, passing the process id as an NSNumber.
+    if (daemonStartedCallback)
+      daemonStartedCallback(self.pid);
+  }
 }
 
 - (void)startPoll {
