@@ -286,41 +286,57 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
 // The following are internal methods (a.k.a hidden methods) to keep control of the daemon.
 #pragma mark - Internal Daemon Tasks
 
+// Initializes the daemonTask. Also invalidates the pollTimer, since it's useless to keep it
+// polling for the PID of the daemon, when we already started it.
 - (void)initDaemonTask {
   [pollTimer invalidate];
   self.pollTimer = nil;
 
+  // Calls the daemonIsStartingCallback, if set.
   if (daemonIsStartingCallback)
     daemonIsStartingCallback();
 
   NSTask *task = [[NSTask alloc] init];
+  // Assigsns the daemonTask property.
   self.daemonTask = task;
   [task release];
 }
 
+// Called when the daemon was terminated from the kernel event watcher.
 - (void)daemonTerminatedFromQueue {
+  // Sets the file description reference to nil.
   fdref = nil;
   [self daemonTerminated:nil];
 }
 
+// Called when the daemon has terminated.
 - (void)daemonTerminated:(NSNotification*)notification {
+  // Removes this instance observer from the task termination notification.
   [[NSNotificationCenter defaultCenter] removeObserver:self name:NSTaskDidTerminateNotification object:daemonTask];
 
+  // Invalidate the daemonTask, and the PID.
   self.daemonTask = nil;
   pid = 0;
 
+  // Starts polling if the daemon has been started from outside the controller.
   [self startPoll];
+  // Calls the proper callback.
   if (daemonStoppedCallback)
     daemonStoppedCallback();
 }
 
+// Called when the daemon failes to start.
 - (void)failedToStartDaemonTask:(NSString *)reason {
+  // Executes the daemonFailedToStartCallback with the received reason.
   if (daemonFailedToStartCallback)
     daemonFailedToStartCallback(reason);
 
+  // Invalidates the daemonTask.
   self.daemonTask = nil;
 }
 
+// Checks if the daemon is running. Called after starting the daemon task, checks whenever
+// the daemon is really running.
 - (void)checkIfDaemonIsRunning {
   if ((pid = daemon_pid([binaryName UTF8String])) != 0) {
     // Invalidate the timer, since it has been started.
@@ -332,26 +348,34 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
   }
 }
 
+// Starts polling to check whenever the daemon is started.
 - (void)startPoll {
+  // If the pollTimer is already started, invalidate it.
   if (pollTimer)
     [pollTimer invalidate];
 
   self.pollTimer = [NSTimer scheduledTimerWithTimeInterval:0.33 target:self selector:@selector(poll:) userInfo:nil repeats:true];
 }
 
+// Called from the pollTimer, every 330ms to check for the daemon.
 - (void)poll:(NSTimer*)timer {
+  // If the daemon is not running, then return.
   if ((pid = daemon_pid([binaryName UTF8String])) == 0)
     return;
 
+  // If the daemonStartedCallback is set, call it passing the process id.
   if (daemonStartedCallback)
     daemonStartedCallback(self.pid);
 
+  // Invalidate the pollTimer, and set the File Description Reference.
   [pollTimer invalidate];
   self.pollTimer = nil;
   fdref = kqueue_watch_pid(pid, self);
 }
 
+// Stops the daemon, and return if it was stopped or not.
 - (BOOL)didStopWithArguments {
+  // Launch a new task, passing the stop arguments.
   NSTask *task = [[[NSTask alloc] init] autorelease];
   task.launchPath = launchPath;
   task.arguments = stopArguments;
@@ -362,37 +386,62 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
   return task.terminationStatus == 0;
 }
 
+// ## Custom Setters and Getters
 #pragma mark - Custom Setters and Getters
 
+// When setting the launchPath, means that the deamon to watch has changed. So this custom
+// setters does what needed to invalidate timers, and prepare it to watch for another daemon.
 - (void)setLaunchPath:(NSString *)theLaunchPath {
   if (launchPath != theLaunchPath) {
-    if (pollTimer)
+    // If the pollTimer is running, invalidate it and set it to nil.
+    if (pollTimer) {
       [pollTimer invalidate];
+      self.pollTimer = nil;
+    }
+
+    // If the timer to check if the daemon has been started up, is running, then invalidate
+    // if and set it to nil.
+    if (checkStartupStatusTimer) {
+      [checkStartupStatusTimer invalidate];
+      self.checkStartupStatusTimer = nil;
+    }
+
+    // If there is the File Description Reference, then disable the callback.
     if (fdref != NULL)
       CFFileDescriptorDisableCallBacks(fdref, kCFFileDescriptorReadCallBack);
 
+    // Replace the launchPath.
     [launchPath release];
     launchPath = [theLaunchPath retain];
+    // And set the binary name to the last path component.
     self.binaryName = [launchPath lastPathComponent];
 
+    // Start polling to check when the daemon starts.
     if (launchPath)
       [self startPoll];
   }
 }
 
+// ## Memory Management
 #pragma mark - Memory Management
 
+// When the instance is dealloc'ed, it is needed to release the retained properties.
 - (void)dealloc {
+  // First, if the instance is observing for the task termination, then remove the instance
+  // from the notification center.
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 
+  // Release the public properties.
   [startArguments release];
   [stopArguments release];
   [launchPath release];
 
+  // Release the hidden properties.
   [binaryName release];
   [pollTimer release];
   [daemonTask release];
 
+  // Release all the callbacks.
   [daemonStartedCallback release];
   [daemonStoppedCallback release];
   [daemonIsStartingCallback release];
@@ -400,6 +449,7 @@ static inline CFFileDescriptorRef kqueue_watch_pid(pid_t pid, id self) {
   [daemonIsStoppingCallback release];
   [daemonFailedToStopCallback release];
 
+  // Call to super.
   [super dealloc];
 }
 
