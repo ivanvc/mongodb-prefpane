@@ -97,8 +97,23 @@ static Preferences *sharedPreferences = nil;
         [self setObject:[NSArray array] forUserDefaultsKey:@"arguments"];
       if (![self objectForUserDefaultsKey:@"parameters"])
         [self setObject:[NSArray array] forUserDefaultsKey:@"parameters"];
-      if (![self objectForUserDefaultsKey:@"launchPath"])
-        [self setObject:@"" forUserDefaultsKey:@"launchPath"];
+      if (![self objectForUserDefaultsKey:@"launchPath"]) {
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        NSString *location = @"";
+
+        if([fileManager fileExistsAtPath:@"/usr/local/bin/mongod"])
+          location = @"/usr/local/bin/mongod";
+        else if ([fileManager fileExistsAtPath:@"/usr/bin/mongod"])
+          location = @"/usr/bin/mongod";
+        else if ([fileManager fileExistsAtPath:@"/bin/mongod"])
+          location = @"/bin/mongod";
+        else if ([fileManager fileExistsAtPath:@"/sbin/mongod"])
+          location = @"/sbin/mongod";
+        else if ([fileManager fileExistsAtPath:@"/opt/bin/mongod"])
+          location = @"/opt/bin/mongod";
+
+        [self setObject:location forUserDefaultsKey:@"launchPath"];
+      }
     }
   }
 }

@@ -36,6 +36,7 @@
 - (void)mainViewDidLoad {
   self.updater = [SUUpdater updaterForBundle:[NSBundle bundleForClass:[self class]]];
   [updater resetUpdateCycle];
+
   FFYDaemonController *dC = [[FFYDaemonController alloc] init];
   self.daemonController = dC;
   [dC release];
