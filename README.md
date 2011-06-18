@@ -5,6 +5,8 @@ Don't you love mongoDB. Don't you hate it literally drains your memory?
 
 Well, mongoDB prefpane is a simple shortcut to start/stop the mongoDB daemon.
 
+![Screenshot](http://ivanvc.github.com/mongodb-prefpane/images/screenshot.png)
+
 Installation
 ------------
 
@@ -24,8 +26,8 @@ Configuration
 Edit the arguments, and choose the binary location, all from the UI (No more
 painful configuration :).
 
-In development...
------------------
+Planned Features
+----------------
 
 * Enable/disable start mongod on login (LaunchAgents)
 * Enable/disable of a menu bar item for quick access
@@ -33,12 +35,15 @@ In development...
 Known Issues
 ------------
 
-* It crashes System Preferences when reinstalling and having this preference pane
-opened.
+* It crashes the System Preferences when reinstalling and having this
+preference pane opened.
 * It won't stop the daemon if it is running from a LaunchAgent.
 
 Credits
 -------
 
-DaemonController and MBSliderButton based in the ones made by [Max Howell](http://github.com/mxcl)
+[DaemonController](http://github.com/ivanvc/DaemonController)
+
+Original DaemonController and MBSliderButton based in the ones made
+by [Max Howell](http://github.com/mxcl)
 
