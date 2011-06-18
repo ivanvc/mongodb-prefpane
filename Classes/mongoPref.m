@@ -13,6 +13,8 @@
 #import "Sparkle/Sparkle.h"
 
 @interface mongoPref(/* Hidden Methods */)
+- (void)binaryLocationChanged:(NSNotification *)notification;
+
 @property (nonatomic, retain) SUUpdater *updater;
 @property (nonatomic, retain) FFYDaemonController *daemonController;
 @end
@@ -62,17 +64,13 @@
 
   [theSlider setState:daemonController.isRunning ? NSOnState : NSOffState];
   [launchPathTextField setStringValue:daemonController.launchPath];
+
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(binaryLocationChanged:) name:NSControlTextDidChangeNotification object:launchPathTextField];
 }
 
-//- (void)daemonStopped {
-//  [theSlider setState:NSOffState animate:YES];
-//}
-//
-//- (void)daemonStarted {
-//  [theSlider setState:NSOnState animate:YES];
-//}
-
 - (void)dealloc {
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+
   [updater release];
   [daemonController release];
 
@@ -95,11 +93,23 @@
 - (IBAction)locateBinary:(id)sender {
   NSOpenPanel *openPanel = [NSOpenPanel openPanel];
   [openPanel setCanChooseFiles:YES];
+  [openPanel setShowsHiddenFiles:YES];
+  [openPanel setResolvesAliases:YES];
 
-  if ([openPanel runModalForDirectory:nil file:nil] == NSOKButton) {
+  if (![[launchPathTextField stringValue] isEqualToString:@""])
+    [openPanel setDirectoryURL:[NSURL fileURLWithPath:[[launchPathTextField stringValue] stringByDeletingLastPathComponent]]];
+
+  if ([openPanel runModal] == NSOKButton) {
     [launchPathTextField setStringValue:[openPanel filename]];
     [[Preferences sharedPreferences] setObject:[launchPathTextField stringValue] forUserDefaultsKey:@"launchPath"];
+    daemonController.launchPath = [[Preferences sharedPreferences] objectForUserDefaultsKey:@"launchPath"];
   }
+}
+
+- (void)binaryLocationChanged:(NSNotification *)notification {
+  NSLog(@"Changed: %@", [[notification object] stringValue]);
+  [[Preferences sharedPreferences] setObject:[launchPathTextField stringValue] forUserDefaultsKey:@"launchPath"];
+  daemonController.launchPath = [[Preferences sharedPreferences] objectForUserDefaultsKey:@"launchPath"];
 }
 
 @end
