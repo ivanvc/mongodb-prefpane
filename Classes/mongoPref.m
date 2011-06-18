@@ -8,76 +8,98 @@
 
 #import "mongoPref.h"
 #import "MBSliderButton.h"
-#import "DaemonController.h"
+#import "FFYDaemonController.h"
+#import "Preferences.h"
 #import "Sparkle/Sparkle.h"
 
 @interface mongoPref(/* Hidden Methods */)
-- (void)checkStatus;
-
 @property (nonatomic, retain) SUUpdater *updater;
-
+@property (nonatomic, retain) FFYDaemonController *daemonController;
 @end
 
 @implementation mongoPref
 @synthesize theSlider;
-@synthesize theArguments;
 @synthesize updater;
+@synthesize daemonController;
+@synthesize launchPathTextField;
 
-- (void) mainViewDidLoad {
+- (id)initWithBundle:(NSBundle *)bundle {
+  if ((self = [super initWithBundle:bundle])) {
+    [[Preferences sharedPreferences] setBundle:bundle];
+  }
+
+  return self;
+}
+
+- (void)mainViewDidLoad {
   self.updater = [SUUpdater updaterForBundle:[NSBundle bundleForClass:[self class]]];
   [updater resetUpdateCycle];
-  dC = [[DaemonController alloc] initWithDelegate:self andArguments:[theArguments stringValue]];
-
-  [theSlider setState:[dC isRunning] ? NSOnState : NSOffState];
-  
-  preferences	= [[NSUserDefaults standardUserDefaults] retain];
-  preferencesDict = [NSDictionary dictionaryWithObjectsAndKeys:@"", @"arguments", nil];
-  [preferences registerDefaults:preferencesDict];
-  [theArguments setStringValue:[preferences objectForKey:@"arguments"]];
-}
-
-- (void) daemonStopped;
-{
-  [theSlider setState:NSOffState animate:YES];
-}
-
-- (void) daemonStarted; 
-{
-  [theSlider setState:NSOnState animate:YES];
-}
-
-- (void) dealloc;
-{
-  [updater release];
+  FFYDaemonController *dC = [[FFYDaemonController alloc] init];
+  self.daemonController = dC;
   [dC release];
-  [preferences release];
-  [preferencesDict release];
+
+  NSMutableArray *arguments = (NSMutableArray *)[[Preferences sharedPreferences] argumentsWithParameters];
+  [arguments insertObject:@"run" atIndex:0];
+
+  daemonController.launchPath     = [[Preferences sharedPreferences] objectForUserDefaultsKey:@"launchPath"];
+  daemonController.startArguments = arguments;
+
+  daemonController.daemonStartedCallback = ^(NSNumber *pid) {
+    [theSlider setState:NSOnState animate:YES];
+  };
+
+  daemonController.daemonFailedToStartCallback = ^(NSString *reason) {
+    [theSlider setState:NSOffState animate:YES];
+  };
+
+  daemonController.daemonStoppedCallback = ^(void) {
+    [theSlider setState:NSOffState animate:YES];
+  };
+
+  daemonController.daemonFailedToStopCallback = ^(NSString *reason) {
+    [theSlider setState:NSOnState animate:YES];
+  };
+
+  [theSlider setState:daemonController.isRunning ? NSOnState : NSOffState];
+  [launchPathTextField setStringValue:daemonController.launchPath];
+}
+
+//- (void)daemonStopped {
+//  [theSlider setState:NSOffState animate:YES];
+//}
+//
+//- (void)daemonStarted {
+//  [theSlider setState:NSOnState animate:YES];
+//}
+
+- (void)dealloc {
+  [updater release];
+  [daemonController release];
+
   [super dealloc];
 }
 
-- (IBAction) startStopDaemon:(id)sender;
-{
-  if (![dC locateBinary]) {
-    [NSAlert alertWithMessageText:@"Cannot locate mongod :(" 
-                    defaultButton:@"Ok" 
-                  alternateButton:nil
-                      otherButton:nil 
-        informativeTextWithFormat:@"Please make sure you have the mongod binary either in /usr/local/bin, /usr/bin, /bin, or /opt/bin"];
-    [theSlider setState:NSOffState];
-    return;
-  }
-  if (theSlider.state == NSOffState) {
-    [dC stop];
-  } else {
-    [dC setArguments:[theArguments stringValue]];
-    [dC start];
-  }
-  
+- (IBAction)startStopDaemon:(id)sender {
+  NSMutableArray *arguments = (NSMutableArray *)[[Preferences sharedPreferences] argumentsWithParameters];
+  [arguments insertObject:@"run" atIndex:0];
+
+  daemonController.launchPath     = [[Preferences sharedPreferences] objectForUserDefaultsKey:@"launchPath"];
+  daemonController.startArguments = arguments;
+
+  if (theSlider.state == NSOffState)
+    [daemonController stop];
+  else
+    [daemonController start];
 }
 
-- (IBAction) changeArguments:(id)sender;
-{
-  [preferences setObject:[theArguments stringValue] forKey:@"arguments"];
+- (IBAction)locateBinary:(id)sender {
+  NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+  [openPanel setCanChooseFiles:YES];
+
+  if ([openPanel runModalForDirectory:nil file:nil] == NSOKButton) {
+    [launchPathTextField setStringValue:[openPanel filename]];
+    [[Preferences sharedPreferences] setObject:[launchPathTextField stringValue] forUserDefaultsKey:@"launchPath"];
+  }
 }
 
 @end
