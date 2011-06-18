@@ -24,7 +24,6 @@
 /* Begin PBXBuildFile section */
 		2C0B7F2713AC54980048CE8D /* FFYDaemonController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C0B7F2513AC54980048CE8D /* FFYDaemonController.h */; };
 		2C0B7F2813AC54980048CE8D /* FFYDaemonController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B7F2613AC54980048CE8D /* FFYDaemonController.m */; };
-		2C3D51D4138B535E0060BA1E /* defaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2C3D51D3138B535E0060BA1E /* defaultPreferences.plist */; };
 		2C3D51D7138B53E20060BA1E /* Preferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C3D51D5138B53E20060BA1E /* Preferences.h */; };
 		2C3D51D8138B53E20060BA1E /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3D51D6138B53E20060BA1E /* Preferences.m */; };
 		2C62ECAD1173C84500F27B65 /* logo-mongodb-onwhite.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECAC1173C84500F27B65 /* logo-mongodb-onwhite.png */; };
@@ -80,7 +79,6 @@
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		2C0B7F2513AC54980048CE8D /* FFYDaemonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFYDaemonController.h; path = Lib/DaemonController/FFYDaemonController.h; sourceTree = "<group>"; };
 		2C0B7F2613AC54980048CE8D /* FFYDaemonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFYDaemonController.m; path = Lib/DaemonController/FFYDaemonController.m; sourceTree = "<group>"; };
-		2C3D51D3138B535E0060BA1E /* defaultPreferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = defaultPreferences.plist; sourceTree = "<group>"; };
 		2C3D51D5138B53E20060BA1E /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
 		2C3D51D6138B53E20060BA1E /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
 		2C62ECAC1173C84500F27B65 /* logo-mongodb-onwhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo-mongodb-onwhite.png"; sourceTree = "<group>"; };
@@ -155,7 +153,6 @@
 				089C167DFE841241C02AAC07 /* InfoPlist.strings */,
 				2C62ECAC1173C84500F27B65 /* logo-mongodb-onwhite.png */,
 				F506C042013D9D8C01CA16C8 /* mongoPref.xib */,
-				2C3D51D3138B535E0060BA1E /* defaultPreferences.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -307,7 +304,6 @@
 				2CD23D4111BC7082005B6619 /* button_surround.png in Resources */,
 				2CD23D4211BC7082005B6619 /* button_knob.png in Resources */,
 				2C79991B138622A5000F1A2E /* dsa_pub.pem in Resources */,
-				2C3D51D4138B535E0060BA1E /* defaultPreferences.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

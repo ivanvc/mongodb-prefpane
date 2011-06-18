@@ -7,15 +7,15 @@
 //
 
 @interface Preferences : NSObject {
-  NSUserDefaults *preferences;
   NSBundle *bundle;
 }
 
-@property (nonatomic, retain) NSUserDefaults *preferences;
 @property (nonatomic, retain) NSBundle *bundle;
 
 + (Preferences *)sharedPreferences;
 
+- (id)objectForUserDefaultsKey:(NSString *)key;
+- (void)setObject:(id)value forUserDefaultsKey:(NSString *)key;
 - (NSArray *)argumentsWithParameters;
 
 @end

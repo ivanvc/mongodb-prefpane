@@ -9,7 +9,6 @@
 #import "Preferences.h"
 
 @implementation Preferences
-@synthesize preferences;
 @synthesize bundle;
 
 #pragma mark - Singleton
@@ -56,15 +55,34 @@ static Preferences *sharedPreferences = nil;
 	return self;
 }
 
-#pragma mark - Initialization
+#pragma mark - Red/Write User defaults
 
-- (id)init {
-  self = [super init];
-  if (self) {
-    self.preferences = [NSUserDefaults standardUserDefaults];
-  }
+- (id)objectForUserDefaultsKey:(NSString *)key {	
+	CFPropertyListRef obj = CFPreferencesCopyAppValue((CFStringRef)key, (CFStringRef)[bundle bundleIdentifier]);
+	return [(id)CFMakeCollectable(obj) autorelease];
+}
 
-  return self;
+- (void)setObject:(id)value forUserDefaultsKey:(NSString *)key {
+  CFPreferencesSetValue((CFStringRef)key, value, (CFStringRef)[bundle bundleIdentifier],  kCFPreferencesCurrentUser,  kCFPreferencesAnyHost);
+  CFPreferencesSynchronize((CFStringRef)[bundle bundleIdentifier], kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+}
+
+- (NSArray *)argumentsWithParameters {
+  NSMutableArray *theArgumentsWithParameters = [NSMutableArray array];
+  NSArray *parameters = [self objectForUserDefaultsKey:@"parameters"];
+
+  [[self objectForUserDefaultsKey:@"arguments"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    NSString *argument  = obj;
+    NSString *parameter = [parameters objectAtIndex:idx];
+    
+    if ([argument length] && [argument characterAtIndex:0] == '-') {
+      [theArgumentsWithParameters addObject:argument];
+      if ([parameter length])
+        [theArgumentsWithParameters addObject:parameter];
+    }
+  }];
+  
+  return (NSArray *)theArgumentsWithParameters;
 }
 
 #pragma mark - Custom Setters and Getters
@@ -75,30 +93,19 @@ static Preferences *sharedPreferences = nil;
     bundle = [aBundle retain];
 
     if (bundle) {
-      NSString *path = [bundle pathForResource:@"defaultPreferences" ofType:@"plist"];
-      [preferences registerDefaults:[NSDictionary dictionaryWithContentsOfFile:path]];
+      if (![self objectForUserDefaultsKey:@"arguments"])
+        [self setObject:[NSArray array] forUserDefaultsKey:@"arguments"];
+      if (![self objectForUserDefaultsKey:@"parameters"])
+        [self setObject:[NSArray array] forUserDefaultsKey:@"parameters"];
+      if (![self objectForUserDefaultsKey:@"launchPath"])
+        [self setObject:@"" forUserDefaultsKey:@"launchPath"];
     }
   }
-}
-
-- (NSArray *)argumentsWithParameters {
-  NSMutableArray *theArgumentsWithParameters = [NSMutableArray array];
-
-  [[preferences objectForKey:@"org.ivanvc.mongo.arguments"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-    NSString *argument  = obj;
-    NSString *parameter = [[preferences objectForKey:@"org.ivanvc.mongo.parameters"] objectAtIndex:idx];
-
-    if ([argument length] && [argument characterAtIndex:0] == '-')
-      [theArgumentsWithParameters addObject:[NSString stringWithFormat:@"%@ %@", argument, parameter]];
-  }];
-
-  return [NSArray arrayWithArray:theArgumentsWithParameters];
 }
 
 #pragma mark - Memory management
 
 - (void)dealloc {
-  [preferences release];
   [bundle release];
 
   [super dealloc];

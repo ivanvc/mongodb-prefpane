@@ -38,8 +38,11 @@
   self.daemonController = dC;
   [dC release];
 
-  daemonController.launchPath     = [[[Preferences sharedPreferences] preferences] objectForKey:@"org.ivanvc.mongo.launchPath"];
-  daemonController.startArguments = [[Preferences sharedPreferences] argumentsWithParameters];
+  NSMutableArray *arguments = (NSMutableArray *)[[Preferences sharedPreferences] argumentsWithParameters];
+  [arguments insertObject:@"run" atIndex:0];
+
+  daemonController.launchPath     = [[Preferences sharedPreferences] objectForUserDefaultsKey:@"launchPath"];
+  daemonController.startArguments = arguments;
 
   daemonController.daemonStartedCallback = ^(NSNumber *pid) {
     [theSlider setState:NSOnState animate:YES];
@@ -58,7 +61,7 @@
   };
 
   [theSlider setState:daemonController.isRunning ? NSOnState : NSOffState];
-  [launchPathTextField setStringValue:[[[Preferences sharedPreferences] preferences] objectForKey:@"org.ivanvc.mongo.launchPath"]];
+  [launchPathTextField setStringValue:daemonController.launchPath];
 }
 
 //- (void)daemonStopped {
@@ -77,8 +80,11 @@
 }
 
 - (IBAction)startStopDaemon:(id)sender {
-  daemonController.launchPath     = [[[Preferences sharedPreferences] preferences] objectForKey:@"org.ivanvc.mongo.launchPath"];
-  daemonController.startArguments = [[Preferences sharedPreferences] argumentsWithParameters];
+  NSMutableArray *arguments = (NSMutableArray *)[[Preferences sharedPreferences] argumentsWithParameters];
+  [arguments insertObject:@"run" atIndex:0];
+
+  daemonController.launchPath     = [[Preferences sharedPreferences] objectForUserDefaultsKey:@"launchPath"];
+  daemonController.startArguments = arguments;
 
   if (theSlider.state == NSOffState)
     [daemonController stop];
@@ -92,7 +98,7 @@
 
   if ([openPanel runModalForDirectory:nil file:nil] == NSOKButton) {
     [launchPathTextField setStringValue:[openPanel filename]];
-    [[[Preferences sharedPreferences] preferences] setObject:[launchPathTextField stringValue] forKey:@"org.ivanvc.mongo.launchPath"];
+    [[Preferences sharedPreferences] setObject:[launchPathTextField stringValue] forUserDefaultsKey:@"launchPath"];
   }
 }
 
