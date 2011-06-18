@@ -1,0 +1,94 @@
+html { 
+  padding-top: 5px;
+}
+
+body { 
+  position: relative;
+  padding: 10px 40px 20px 20px;
+  font: 100%/1.5 "raleway-1", "raleway-2", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background: #fff url(../images/noise.png);
+  color: rgb(17,24,28);
+}
+
+h1, h2 {
+  font-style: normal;
+  text-shadow : 0 1px 1px rgb(200,200,200);
+}
+
+h2 {
+  font-weight: 105;
+}
+
+h1 {
+  font-weight: 100;
+  margin-bottom: 0;
+  text-shadow : 0 2px 2px rgb(200,200,200);
+}
+
+.forkme {
+  position: absolute;
+  right: -8px;
+  top: -15px;
+}
+
+header {
+  padding: 60px 5px;
+  float: left;
+}
+
+hgroup {
+  margin-top: 30px;
+  width: 280px;
+  padding-top: 140px;
+  margin-bottom: 10px;
+  background: transparent url(../images/icon.png) no-repeat 50% 0%;
+}
+
+nav > ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav > ul> li {
+  float: left;
+  padding-right: 8px;
+  font-size: 19px;
+}
+
+div.content {
+  padding-left: 300px;
+}
+
+div.content > div {
+  padding-left: 38px;
+}
+
+a, a:visited {
+  outline: none;
+  color: rgb(57,64,68);
+  text-shadow : 0 1px 1px rgb(200,200,200);
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+::-webkit-selection {
+  color: rgb(255,255,255);
+  background-color: rgb(17,24,28); 
+  text-shadow: none;
+}
+
+::-moz-selection {
+  color: rgb(255,255,255);
+  background-color: rgb(17,24,28); 
+  text-shadow: none;
+}
+
+::selection {
+  color: rgb(255,255,255);
+  background-color: rgb(17,24,28); 
+  text-shadow: none;
+}
+
