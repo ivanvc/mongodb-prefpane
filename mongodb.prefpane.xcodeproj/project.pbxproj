@@ -22,6 +22,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		2C0B7F2713AC54980048CE8D /* FFYDaemonController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C0B7F2513AC54980048CE8D /* FFYDaemonController.h */; };
+		2C0B7F2813AC54980048CE8D /* FFYDaemonController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C0B7F2613AC54980048CE8D /* FFYDaemonController.m */; };
 		2C3D51D4138B535E0060BA1E /* defaultPreferences.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2C3D51D3138B535E0060BA1E /* defaultPreferences.plist */; };
 		2C3D51D7138B53E20060BA1E /* Preferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C3D51D5138B53E20060BA1E /* Preferences.h */; };
 		2C3D51D8138B53E20060BA1E /* Preferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3D51D6138B53E20060BA1E /* Preferences.m */; };
@@ -30,8 +32,6 @@
 		2C62ECBF1173CEA800F27B65 /* mongoPref.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECBE1173CEA800F27B65 /* mongoPref.tiff */; };
 		2C62ECCD1173CFA500F27B65 /* switcher-text-off.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECC61173CFA500F27B65 /* switcher-text-off.png */; };
 		2C62ECCF1173CFA500F27B65 /* switcher-text-on.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C62ECC81173CFA500F27B65 /* switcher-text-on.png */; };
-		2C62EDFC117425F700F27B65 /* DaemonController.h in Headers */ = {isa = PBXBuildFile; fileRef = 2C62EDFA117425F700F27B65 /* DaemonController.h */; };
-		2C62EDFD117425F700F27B65 /* DaemonController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C62EDFB117425F700F27B65 /* DaemonController.m */; };
 		2C79991813861CEA000F1A2E /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C79991713861CEA000F1A2E /* Sparkle.framework */; };
 		2C79991913861CF7000F1A2E /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2C79991713861CEA000F1A2E /* Sparkle.framework */; };
 		2C79991B138622A5000F1A2E /* dsa_pub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 2C79991A138622A5000F1A2E /* dsa_pub.pem */; };
@@ -78,6 +78,8 @@
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		089C167FFE841241C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7ADFEA557BF11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		2C0B7F2513AC54980048CE8D /* FFYDaemonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FFYDaemonController.h; path = Lib/DaemonController/FFYDaemonController.h; sourceTree = "<group>"; };
+		2C0B7F2613AC54980048CE8D /* FFYDaemonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FFYDaemonController.m; path = Lib/DaemonController/FFYDaemonController.m; sourceTree = "<group>"; };
 		2C3D51D3138B535E0060BA1E /* defaultPreferences.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = defaultPreferences.plist; sourceTree = "<group>"; };
 		2C3D51D5138B53E20060BA1E /* Preferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Preferences.h; sourceTree = "<group>"; };
 		2C3D51D6138B53E20060BA1E /* Preferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Preferences.m; sourceTree = "<group>"; };
@@ -86,8 +88,6 @@
 		2C62ECBE1173CEA800F27B65 /* mongoPref.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = mongoPref.tiff; sourceTree = "<group>"; };
 		2C62ECC61173CFA500F27B65 /* switcher-text-off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "switcher-text-off.png"; sourceTree = "<group>"; };
 		2C62ECC81173CFA500F27B65 /* switcher-text-on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "switcher-text-on.png"; sourceTree = "<group>"; };
-		2C62EDFA117425F700F27B65 /* DaemonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DaemonController.h; sourceTree = "<group>"; };
-		2C62EDFB117425F700F27B65 /* DaemonController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DaemonController.m; sourceTree = "<group>"; wrapsLines = 1; };
 		2C79991713861CEA000F1A2E /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Lib/Sparkle.framework; sourceTree = "<group>"; };
 		2C79991A138622A5000F1A2E /* dsa_pub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dsa_pub.pem; sourceTree = "<group>"; };
 		2CD23D0911BC6AA2005B6619 /* MBSliderButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBSliderButton.h; sourceTree = "<group>"; };
@@ -125,6 +125,7 @@
 				08FB77AFFE84173DC02AAC07 /* Classes */,
 				32DBCFA10370C40200C91783 /* Other Sources */,
 				089C167CFE841241C02AAC07 /* Resources */,
+				2C0B7F2313AC54650048CE8D /* Lib */,
 				089C1671FE841209C02AAC07 /* Frameworks and Libraries */,
 				19C28FB8FE9D52D311CA2CBB /* Products */,
 			);
@@ -162,8 +163,6 @@
 		08FB77AFFE84173DC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				2C62EDFA117425F700F27B65 /* DaemonController.h */,
-				2C62EDFB117425F700F27B65 /* DaemonController.m */,
 				F506C03C013D9D7901CA16C8 /* mongoPref.h */,
 				F506C03D013D9D7901CA16C8 /* mongoPref.m */,
 				2CD23D0911BC6AA2005B6619 /* MBSliderButton.h */,
@@ -203,6 +202,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		2C0B7F2313AC54650048CE8D /* Lib */ = {
+			isa = PBXGroup;
+			children = (
+				2C0B7F2413AC547A0048CE8D /* DaemonController */,
+			);
+			name = Lib;
+			sourceTree = "<group>";
+		};
+		2C0B7F2413AC547A0048CE8D /* DaemonController */ = {
+			isa = PBXGroup;
+			children = (
+				2C0B7F2513AC54980048CE8D /* FFYDaemonController.h */,
+				2C0B7F2613AC54980048CE8D /* FFYDaemonController.m */,
+			);
+			name = DaemonController;
+			sourceTree = "<group>";
+		};
 		32DBCFA10370C40200C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -220,10 +236,10 @@
 			files = (
 				8D202CEA0486D31800D8A456 /* mongo_Prefix.pch in Headers */,
 				8D202CEB0486D31800D8A456 /* mongoPref.h in Headers */,
-				2C62EDFC117425F700F27B65 /* DaemonController.h in Headers */,
 				2CD23D0B11BC6AA2005B6619 /* MBSliderButton.h in Headers */,
 				2CD9EB3E1384C231001BE97E /* ArgumentsViewController.h in Headers */,
 				2C3D51D7138B53E20060BA1E /* Preferences.h in Headers */,
+				2C0B7F2713AC54980048CE8D /* FFYDaemonController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -329,10 +345,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D202CF10486D31800D8A456 /* mongoPref.m in Sources */,
-				2C62EDFD117425F700F27B65 /* DaemonController.m in Sources */,
 				2CD23D0C11BC6AA2005B6619 /* MBSliderButton.m in Sources */,
 				2CD9EB3F1384C231001BE97E /* ArgumentsViewController.m in Sources */,
 				2C3D51D8138B53E20060BA1E /* Preferences.m in Sources */,
+				2C0B7F2813AC54980048CE8D /* FFYDaemonController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
