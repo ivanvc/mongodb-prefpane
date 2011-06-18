@@ -38,7 +38,7 @@
   self.daemonController = dC;
   [dC release];
 
-  daemonController.launchPath     = [[[Preferences sharedPreferences] preferences] objectForKey:@"launchPath"];
+  daemonController.launchPath     = [[[Preferences sharedPreferences] preferences] objectForKey:@"org.ivanvc.mongo.launchPath"];
   daemonController.startArguments = [[Preferences sharedPreferences] argumentsWithParameters];
 
   daemonController.daemonStartedCallback = ^(NSNumber *pid) {
@@ -58,6 +58,7 @@
   };
 
   [theSlider setState:daemonController.isRunning ? NSOnState : NSOffState];
+  [launchPathTextField setStringValue:[[[Preferences sharedPreferences] preferences] objectForKey:@"org.ivanvc.mongo.launchPath"]];
 }
 
 //- (void)daemonStopped {
@@ -76,7 +77,7 @@
 }
 
 - (IBAction)startStopDaemon:(id)sender {
-  daemonController.launchPath     = [[[Preferences sharedPreferences] preferences] objectForKey:@"launchPath"];
+  daemonController.launchPath     = [[[Preferences sharedPreferences] preferences] objectForKey:@"org.ivanvc.mongo.launchPath"];
   daemonController.startArguments = [[Preferences sharedPreferences] argumentsWithParameters];
 
   if (theSlider.state == NSOffState)
@@ -90,8 +91,8 @@
   [openPanel setCanChooseFiles:YES];
 
   if ([openPanel runModalForDirectory:nil file:nil] == NSOKButton) {
-    [launchPathTextField setValue:[openPanel filename]];
-    [[[Preferences sharedPreferences] preferences] setObject:[launchPathTextField value] forKey:@"launchPath"];
+    [launchPathTextField setStringValue:[openPanel filename]];
+    [[[Preferences sharedPreferences] preferences] setObject:[launchPathTextField stringValue] forKey:@"org.ivanvc.mongo.launchPath"];
   }
 }
 

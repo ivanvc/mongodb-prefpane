@@ -26,8 +26,8 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if (self) {
-    self.arguments  = [NSMutableArray arrayWithArray:[[[Preferences sharedPreferences] preferences] objectForKey:@"arguments"]];
-    self.parameters = [NSMutableArray arrayWithArray:[[[Preferences sharedPreferences] preferences] objectForKey:@"parameters"]];
+    self.arguments  = [NSMutableArray arrayWithArray:[[[Preferences sharedPreferences] preferences] objectForKey:@"org.ivanvc.mongo.arguments"]];
+    self.parameters = [NSMutableArray arrayWithArray:[[[Preferences sharedPreferences] preferences] objectForKey:@"org.ivanvc.mongo.parameters"]];
   }
 
   return self;
@@ -36,8 +36,8 @@
 #pragma mark - Preferences management
 
 - (void)updatePreferences {
-  [[[Preferences sharedPreferences] preferences] setObject:[NSArray arrayWithArray:arguments] forKey:@"arguments"];
-  [[[Preferences sharedPreferences] preferences] setObject:[NSArray arrayWithArray:parameters] forKey:@"parameters"];
+  [[[Preferences sharedPreferences] preferences] setObject:[NSArray arrayWithArray:arguments] forKey:@"org.ivanvc.mongo.arguments"];
+  [[[Preferences sharedPreferences] preferences] setObject:[NSArray arrayWithArray:parameters] forKey:@"org.ivanvc.mongo.parameters"];
 }
 
 #pragma mark - Table View Tasks

@@ -84,9 +84,9 @@ static Preferences *sharedPreferences = nil;
 - (NSArray *)argumentsWithParameters {
   NSMutableArray *theArgumentsWithParameters = [NSMutableArray array];
 
-  [[preferences objectForKey:@"arguments"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+  [[preferences objectForKey:@"org.ivanvc.mongo.arguments"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *argument  = obj;
-    NSString *parameter = [[preferences objectForKey:@"parameters"] objectAtIndex:idx];
+    NSString *parameter = [[preferences objectForKey:@"org.ivanvc.mongo.parameters"] objectAtIndex:idx];
 
     if ([argument length] && [argument characterAtIndex:0] == '-')
       [theArgumentsWithParameters addObject:[NSString stringWithFormat:@"%@ %@", argument, parameter]];

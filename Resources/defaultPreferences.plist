@@ -2,11 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>arguments</key>
+	<key>org.ivanvc.mongo.arguments</key>
 	<array/>
-	<key>launchPath</key>
+	<key>org.ivanvc.mongo.launchPath</key>
 	<string></string>
-	<key>parameters</key>
+	<key>org.ivanvc.mongo.parameters</key>
 	<array/>
 </dict>
 </plist>
