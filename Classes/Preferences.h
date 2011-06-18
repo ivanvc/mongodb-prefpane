@@ -16,6 +16,6 @@
 
 + (Preferences *)sharedPreferences;
 
-- (NSString *)argumentsWithParameters;
+- (NSArray *)argumentsWithParameters;
 
 @end

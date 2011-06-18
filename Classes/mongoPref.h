@@ -8,22 +8,22 @@
 
 #import <PreferencePanes/PreferencePanes.h>
 
-@class DaemonController;
+@class FFYDaemonController;
 @class MBSliderButton;
 @class SUUpdater;
 
 @interface mongoPref : NSPreferencePane {
-  MBSliderButton   *theSlider;
-  DaemonController *dC;
+  MBSliderButton *theSlider;
+  NSTextField *launchPathTextField;
 @private
-  SUUpdater        *updater;
+  FFYDaemonController *daemonController;
+  SUUpdater *updater;
 }
 
-@property (nonatomic, retain) IBOutlet MBSliderButton	*theSlider;
+@property (nonatomic, assign) IBOutlet MBSliderButton	*theSlider;
+@property (nonatomic, assign) IBOutlet NSTextField *launchPathTextField;
 
-- (void)mainViewDidLoad;
-- (void)daemonStopped;
-- (void)daemonStarted;
 - (IBAction)startStopDaemon:(id)sender;
+- (IBAction)locateBinary:(id)sender;
 
 @end

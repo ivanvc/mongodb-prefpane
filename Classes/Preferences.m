@@ -72,7 +72,8 @@ static Preferences *sharedPreferences = nil;
 - (void)setBundle:(NSBundle *)aBundle {
   if (bundle != aBundle) {
     [bundle release];
-    self.bundle = [bundle retain];
+    bundle = [aBundle retain];
+
     if (bundle) {
       NSString *path = [bundle pathForResource:@"defaultPreferences" ofType:@"plist"];
       [preferences registerDefaults:[NSDictionary dictionaryWithContentsOfFile:path]];
@@ -80,17 +81,18 @@ static Preferences *sharedPreferences = nil;
   }
 }
 
-- (NSString *)argumentsWithParameters {
-  NSMutableString *theArgumentsWithParameters = [NSMutableString string];
+- (NSArray *)argumentsWithParameters {
+  NSMutableArray *theArgumentsWithParameters = [NSMutableArray array];
 
   [[preferences objectForKey:@"arguments"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *argument  = obj;
-    if ([argument length] && [argument characterAtIndex:0] == '-') {
-      [theArgumentsWithParameters appendFormat:[NSString stringWithFormat:@"%@ %@ ", argument, [[preferences objectForKey:@"parameters"] objectAtIndex:idx]]];
-    }
+    NSString *parameter = [[preferences objectForKey:@"parameters"] objectAtIndex:idx];
+
+    if ([argument length] && [argument characterAtIndex:0] == '-')
+      [theArgumentsWithParameters addObject:[NSString stringWithFormat:@"%@ %@", argument, parameter]];
   }];
 
-  return [NSString stringWithString:theArgumentsWithParameters];
+  return [NSArray arrayWithArray:theArgumentsWithParameters];
 }
 
 #pragma mark - Memory management

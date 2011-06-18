@@ -2,7 +2,7 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10J869</string>
+		<string key="IBDocument.SystemVersion">10J4138</string>
 		<string key="IBDocument.InterfaceBuilderVersion">1305</string>
 		<string key="IBDocument.AppKitVersion">1038.35</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
@@ -334,7 +334,6 @@
 											<string key="NSFrame">{{16, 12}, {108, 18}}</string>
 											<reference key="NSSuperview" ref="967426195"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView"/>
 											<int key="NSViewLayerContentsRedrawPolicy">2</int>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSButtonCell" key="NSCell" id="645120745">
@@ -441,7 +440,7 @@
 																	<string key="NSFrameSize">{302, 64}</string>
 																	<reference key="NSSuperview" ref="850165879"/>
 																	<reference key="NSWindow"/>
-																	<reference key="NSNextKeyView" ref="234765737"/>
+																	<reference key="NSNextKeyView" ref="588413210"/>
 																	<int key="NSViewLayerContentsRedrawPolicy">2</int>
 																	<bool key="NSEnabled">YES</bool>
 																	<object class="NSTableHeaderView" key="NSHeaderView" id="1032343113">
@@ -645,7 +644,7 @@
 													<string key="NSFrame">{{14, 13}, {319, 82}}</string>
 													<reference key="NSSuperview" ref="765648594"/>
 													<reference key="NSWindow"/>
-													<reference key="NSNextKeyView" ref="588413210"/>
+													<reference key="NSNextKeyView" ref="850165879"/>
 													<int key="NSViewLayerContentsRedrawPolicy">2</int>
 													<int key="NSsFlags">18</int>
 													<reference key="NSVScroller" ref="234765737"/>
@@ -701,7 +700,7 @@
 					<reference key="NSWindow"/>
 					<reference key="NSNextKeyView" ref="103844292"/>
 				</object>
-				<string key="NSScreenRect">{{0, 0}, {1280, 778}}</string>
+				<string key="NSScreenRect">{{0, 0}, {1680, 1028}}</string>
 				<string key="NSMinSize">{224.664, 32}</string>
 				<string key="NSMaxSize">{1e+13, 1e+13}</string>
 			</object>
@@ -781,6 +780,22 @@
 						<reference key="destination" ref="191850522"/>
 					</object>
 					<int key="connectionID">180</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">locateBinary:</string>
+						<reference key="source" ref="294453543"/>
+						<reference key="destination" ref="923445185"/>
+					</object>
+					<int key="connectionID">189</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">launchPathTextField</string>
+						<reference key="source" ref="294453543"/>
+						<reference key="destination" ref="1045326488"/>
+					</object>
+					<int key="connectionID">190</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1206,7 +1221,7 @@
 				<reference key="dict.values" ref="0"/>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">188</int>
+			<int key="maxID">190</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1353,7 +1368,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>changeArguments:</string>
+							<string>locateBinary:</string>
 							<string>startStopDaemon:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1366,13 +1381,13 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>changeArguments:</string>
+							<string>locateBinary:</string>
 							<string>startStopDaemon:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBActionInfo">
-								<string key="name">changeArguments:</string>
+								<string key="name">locateBinary:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
@@ -1385,7 +1400,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>theArguments</string>
+							<string>launchPathTextField</string>
 							<string>theSlider</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1398,13 +1413,13 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>theArguments</string>
+							<string>launchPathTextField</string>
 							<string>theSlider</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBToOneOutletInfo">
-								<string key="name">theArguments</string>
+								<string key="name">launchPathTextField</string>
 								<string key="candidateClassName">NSTextField</string>
 							</object>
 							<object class="IBToOneOutletInfo">

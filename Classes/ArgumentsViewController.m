@@ -94,8 +94,8 @@
 }
 
 - (IBAction)addRow:(id)sender {
-  [arguments addObject:[NSString stringWithFormat:@"-argument", [arguments count]]];
-  [parameters addObject:[NSString stringWithFormat:@"parameter", [parameters count]]];
+  [arguments addObject:[NSString stringWithFormat:@"-argument%d", [arguments count]]];
+  [parameters addObject:[NSString stringWithFormat:@"parameter%d", [parameters count]]];
 
   [self.tableView reloadData];
 }
