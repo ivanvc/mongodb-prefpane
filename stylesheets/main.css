@@ -1,10 +1,33 @@
-html { 
-  padding-top: 5px;
+/*  Less Framework 4
+ *    http://lessframework.com
+ *      by Joni Korpi
+ *        License: http://opensource.org/licenses/mit-license.php */
+
+
+/*  Resets
+ *    ------  */
+
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6,
+p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em,
+img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, hr,
+dl, dt, dd, ol, ul, li, fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figure, figcaption, hgroup,
+menu, footer, header, nav, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
 }
 
-body { 
+article, aside, canvas, figure, figure img, figcaption, hgroup,
+footer, header, nav, section, audio, video {
+  display: block;
+}
+
+a img {border: 0;}
+
+body {
   position: relative;
-  padding: 10px 40px 20px 20px;
   font: 100%/1.5 "raleway-1", "raleway-2", "Helvetica Neue", Helvetica, Arial, sans-serif;
   background: #fff url(../images/noise.png);
   color: rgb(17,24,28);
@@ -27,41 +50,17 @@ h1 {
 
 .forkme {
   position: absolute;
-  right: -8px;
-  top: -15px;
-}
-
-header {
-  padding: 60px 5px;
-  float: left;
+  right: 0;
+  top: 0;
 }
 
 hgroup {
   margin-top: 30px;
-  width: 280px;
-  padding-top: 140px;
-  margin-bottom: 10px;
   background: transparent url(../images/icon.png) no-repeat 50% 0%;
 }
 
 nav > ul {
   list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-nav > ul> li {
-  float: left;
-  padding-right: 8px;
-  font-size: 19px;
-}
-
-div.content {
-  padding-left: 300px;
-}
-
-div.content > div {
-  padding-left: 38px;
 }
 
 a, a:visited {
@@ -76,19 +75,256 @@ a:hover {
 
 ::-webkit-selection {
   color: rgb(255,255,255);
-  background-color: rgb(17,24,28); 
+  background-color: rgb(17,24,28);
   text-shadow: none;
 }
 
 ::-moz-selection {
   color: rgb(255,255,255);
-  background-color: rgb(17,24,28); 
+  background-color: rgb(17,24,28);
   text-shadow: none;
 }
 
 ::selection {
   color: rgb(255,255,255);
-  background-color: rgb(17,24,28); 
+  background-color: rgb(17,24,28);
   text-shadow: none;
 }
 
+/*    Default Layout: 992px.
+Gutters: 24px.
+Outer margins: 48px.
+Leftover space for scrollbars @1024px: 32px.
+-------------------------------------------------------------------------------
+cols    1     2      3      4      5      6      7      8      9      10
+px      68    160    252    344    436    528    620    712    804    896    */
+
+body {
+  margin: 0 auto;
+}
+
+div.main {
+  width: 896px;
+  padding: 52px 48px 84px;
+  -webkit-text-size-adjust: 100%; /* Stops Mobile Safari from auto-adjusting font-sizes */
+}
+
+header {
+  padding: 60px 5px;
+  float: left;
+}
+
+hgroup {
+  margin-top: 30px;
+  width: 255px;
+  padding-top: 160px;
+  margin-bottom: 10px;
+}
+
+h1 {
+  font-size: 29px;
+}
+
+nav > ul {
+  margin: 0;
+  padding: 0;
+}
+
+nav > ul> li {
+  float: left;
+  padding-right: 8px;
+  font-size: 17px;
+}
+
+div.content {
+  padding-left: 265px;
+}
+
+div.content > div {
+  padding-left: 48px;
+  padding-bottom: 20px;
+}
+
+div.content > div ul {
+  padding-top: 15px;
+  padding-left: 30px;
+  line-height: 24px;
+}
+
+figure {
+  width: 748px;
+  height: 382px;
+  background: transparent url(../images/screenshot.png);
+}
+
+/*    Tablet Layout: 768px.
+Gutters: 24px.
+Outer margins: 28px.
+Inherits styles from: Default Layout.
+-----------------------------------------------------------------
+cols    1     2      3      4      5      6      7      8
+px      68    160    252    344    436    528    620    712    */
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+
+  div.main {
+    width: 712px;
+    padding: 40px 38px 64px;
+}
+
+header {
+  padding: 60px 5px;
+  float: left;
+}
+
+hgroup {
+  width: 210px;
+  margin-bottom: 3px;
+}
+
+h1 {
+  font-size: 24px;
+}
+
+nav > ul> li {
+  padding-right: 6px;
+  font-size: 14px;
+}
+
+div.content {
+  padding-left: 215px;
+}
+
+figure {
+  width: 530px;
+  height: 271px;
+  background: transparent url(../images/screenshot530.png);
+}
+
+}
+
+/*    Mobile Layout: 320px.
+Gutters: 24px.
+Outer margins: 34px.
+Inherits styles from: Default Layout.
+---------------------------------------------
+cols    1     2      3
+px      68    160    252    */
+
+@media only screen and (max-width: 767px) {
+
+  div.main {
+    width: 252px;
+    padding: 48px 34px 64px;
+    -webkit-text-size-adjust: 100%; /* Stops Mobile Safari from auto-adjusting font-sizes */
+}
+
+header {
+  padding: 0px 5px;
+  height: 250px;
+}
+
+hgroup {
+  margin-top: 0px;
+  width: 252px;
+  padding-top: 160px;
+  margin-bottom: 10px;
+}
+
+nav {
+  padding-left: 2px;
+}
+
+nav > ul> li {
+  padding-right: 8px;
+  font-size: 16px;
+}
+
+div.content {
+  padding-left: 0;
+}
+
+div.content > div {
+  padding-left: 0;
+  padding-bottom: 10px;
+}
+
+div.content > div ul {
+  padding-top: 7px;
+  padding-left: 7px;
+  line-height: 18px;
+}
+
+figure {
+  width: 0;
+  height: 0;
+}
+}
+
+
+
+/*    Wide Mobile Layout: 480px.
+Gutters: 24px.
+Outer margins: 22px.
+Inherits styles from: Default Layout, Mobile Layout.
+------------------------------------------------------------
+cols    1     2      3      4      5
+px      68    160    252    344    436    */
+
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+
+  div.main {
+    width: 436px;
+    padding: 36px 28px 48px;
+    -webkit-text-size-adjust: 100%; /* Stops Mobile Safari from auto-adjusting font-sizes */
+}
+
+header {
+  padding: 0px 5px;
+  height: 160px;
+}
+
+hgroup {
+  margin-top: 0px;
+  height: 117px;
+  padding-top: 40px;
+  padding-left: 130px;
+  margin-bottom: 10px;
+  background-position: 0 0;
+}
+
+nav {
+  padding-left: 2px;
+  position: relative;
+  top: -85px;
+  left: 130px;
+}
+
+nav > ul> li {
+  float: none;
+  line-height: 22px;
+  font-size: 18px;
+}
+
+div.content {
+  padding-left: 0;
+}
+
+div.content > div {
+  padding-left: 20px;
+  padding-bottom: 10px;
+}
+
+div.content > div ul {
+  padding-top: 7px;
+  padding-left: 26px;
+  line-height: 22px;
+}
+
+figure {
+  width: 436px;
+  height: 223px;
+  margin-top: 170px;
+  background-image: url(../images/screenshot436.png);
+}
+}

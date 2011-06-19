@@ -3,54 +3,58 @@
   <head>
     <title>mongoDB.prefpane</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.3.0/build/cssreset/reset-context-min.css">
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
     <link href="stylesheets/main.css" type="text/css" rel="stylesheet" media="all">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <script type="text/javascript" src="http://use.typekit.com/zpe1sja.js"></script>
     <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
   </head>
 
   <body>
     <a href="http://github.com/ivanvc" class="forkme"><img src="https://d3nwyuy0nl342s.cloudfront.net/img/71eeaab9d563c2b3c590319b398dd35683265e85/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub"></a>
-    <header>
-      <hgroup>
-        <h1>mongoDB.prefpane</h1>
-      </hgroup>
-      <nav>
-        <ul>
-          <li><a href="http://github.com/downloads/ivanvc/mongodb-prefpane/mongodb.prefpane%200.0.4.zip">Download</a></li>
-          <li><a href="http://github.com/ivanvc/mongodb-prefpane">Code</a></li>
-          <li><a href="http://github.com/ivanvc/mongodb-prefpane/issues">Report an issue</a></li>
-        </ul>
-      </nav>
-    </header>
+    <div class="main">
+      <header>
+        <hgroup>
+          <h1>mongoDB.prefpane</h1>
+        </hgroup>
+        <nav>
+          <ul>
+            <li><a href="http://github.com/downloads/ivanvc/mongodb-prefpane/mongodb.prefpane%200.0.4.zip">Download</a></li>
+            <li><a href="http://github.com/ivanvc/mongodb-prefpane">Code</a></li>
+            <li><a href="http://github.com/ivanvc/mongodb-prefpane/issues">Report an issue</a></li>
+          </ul>
+        </nav>
+      </header>
 
-    <div class="content">
-      <figure>
-        <img src="images/screenshot.png" alt="screenshot">
-      </figure>
+      <div class="content">
+        <figure>
+        </figure>
 
-      <div class="features">
-        <h2>Features</h2>
-        <ul>
-          <li>Easy configuration</li>
-          <li>Track of the daemon even if it wasn't started by the prefpane</li>
-        </ul>
-      </div>
+        <div class="features">
+          <h2>Features</h2>
+          <ul>
+            <li>Easy configuration</li>
+            <li>Track of the daemon even if it wasn't started by the prefpane</li>
+          </ul>
+        </div>
 
-      <div class="plans">
-        <h2>Planned Features</h2>
-        <ul>
-          <li>Enable/disable autostart on login (LaunchAgent)</li>
-          <li>Add a menu bar item to quickly turn it on and off</li>
-        </ul>
-      </div>
+        <div class="plans">
+          <h2>Planned Features</h2>
+          <ul>
+            <li>Enable/disable autostart on login (LaunchAgent)</li>
+            <li>Add a menu bar item to quickly turn it on and off</li>
+          </ul>
+        </div>
 
-      <div class="issues">
-        <h2>Known Issues</h2>
-        <ul>
-          <li>It crashes the System Preferences when reinstalling only if the preference pane is opened</li>
-          <li>It won't stop the daemon if it is running from a LaunchAgent</li>
-        </ul>
+        <div class="issues">
+          <h2>Known Issues</h2>
+          <ul>
+            <li>It crashes the System Preferences when reinstalling only if the preference pane is opened</li>
+            <li>It won't stop the daemon if it is running from a LaunchAgent</li>
+          </ul>
+        </div>
       </div>
     </div>
   </body>
