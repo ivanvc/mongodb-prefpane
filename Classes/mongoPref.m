@@ -101,7 +101,7 @@
     [openPanel setDirectoryURL:[NSURL fileURLWithPath:[[launchPathTextField stringValue] stringByDeletingLastPathComponent]]];
 
   if ([openPanel runModal] == NSOKButton) {
-    [launchPathTextField setStringValue:[openPanel filename]];
+    [launchPathTextField setStringValue:[openPanel.URL path]];
     [[Preferences sharedPreferences] setObject:[launchPathTextField stringValue] forUserDefaultsKey:@"launchPath"];
     daemonController.launchPath = [[Preferences sharedPreferences] objectForUserDefaultsKey:@"launchPath"];
   }
