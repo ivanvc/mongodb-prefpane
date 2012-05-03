@@ -73,7 +73,7 @@ static Preferences *sharedPreferences = nil;
 
   [[self objectForUserDefaultsKey:@"arguments"] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *argument  = obj;
-    NSString *parameter = [parameters objectAtIndex:idx];
+    NSString *parameter = [[parameters objectAtIndex:idx] stringByExpandingTildeInPath];
     
     if ([argument length] && [argument characterAtIndex:0] == '-') {
       [theArgumentsWithParameters addObject:argument];
