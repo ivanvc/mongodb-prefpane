@@ -49,13 +49,13 @@ static Preferences *sharedPreferences = nil;
 	return NSUIntegerMax;
 }
 
-- (void)release {}
+- (oneway void)release {}
 
 - (id)autorelease {
 	return self;
 }
 
-#pragma mark - Red/Write User defaults
+#pragma mark - Read/Write User defaults
 
 - (id)objectForUserDefaultsKey:(NSString *)key {	
 	CFPropertyListRef obj = CFPreferencesCopyAppValue((CFStringRef)key, (CFStringRef)[bundle bundleIdentifier]);
@@ -63,7 +63,7 @@ static Preferences *sharedPreferences = nil;
 }
 
 - (void)setObject:(id)value forUserDefaultsKey:(NSString *)key {
-  CFPreferencesSetValue((CFStringRef)key, value, (CFStringRef)[bundle bundleIdentifier],  kCFPreferencesCurrentUser,  kCFPreferencesAnyHost);
+  CFPreferencesSetValue((CFStringRef)key, value, (CFStringRef)[bundle bundleIdentifier], kCFPreferencesCurrentUser,  kCFPreferencesAnyHost);
   CFPreferencesSynchronize((CFStringRef)[bundle bundleIdentifier], kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
 }
 
