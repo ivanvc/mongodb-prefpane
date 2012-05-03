@@ -207,7 +207,7 @@
           
           //TODO if let go of it halfway then slide to non destructive side
           
-          if(location.x == 0 && state || location.x == KNOB_MAX_X && !state){
+          if((location.x == 0 && state) || (location.x == KNOB_MAX_X && !state)){
             state = !state;
             // wanted to use self.action and self.target but both are null
             // even though I set them up in IB! :(
