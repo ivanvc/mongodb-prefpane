@@ -108,7 +108,6 @@
 }
 
 - (void)binaryLocationChanged:(NSNotification *)notification {
-  NSLog(@"Changed: %@", [[notification object] stringValue]);
   [[Preferences sharedPreferences] setObject:[launchPathTextField stringValue] forUserDefaultsKey:@"launchPath"];
   daemonController.launchPath = [[Preferences sharedPreferences] objectForUserDefaultsKey:@"launchPath"];
 }
