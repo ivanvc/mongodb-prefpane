@@ -32,11 +32,9 @@ Planned Features
 * Enable/disable start mongod on login (LaunchAgents)
 * Enable/disable of a menu bar item for quick access
 
-Known Issues
-------------
+Limitations
+-----------
 
-* It crashes the System Preferences when reinstalling and having this
-preference pane opened.
 * It won't stop the daemon if it is running from a LaunchAgent.
 
 Credits
