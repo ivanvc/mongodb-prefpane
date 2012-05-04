@@ -6,15 +6,15 @@
     <description>Most recent changes with links to updates.</description>
     <language>en</language>      
     <item>
-      <title>Version 0.0.4</title>
-      <sparkle:releaseNotesLink>http://ivanvc.github.com/mongodb-prefpane/release-notes.html#version-0.0.4</sparkle:releaseNotesLink>
-      <pubDate>Sat, 18 Jun 2011 16:32:37 -0500</pubDate>
+      <title>Version 0.1.0</title>
+      <sparkle:releaseNotesLink>http://ivanvc.github.com/mongodb-prefpane/release-notes.html#version-0.1.0</sparkle:releaseNotesLink>
+      <pubDate>Fri, 04 May 2012 13:20:30 -0500</pubDate>
       <enclosure
-        url="http://github.com/downloads/ivanvc/mongodb-prefpane/mongodb.prefpane 0.0.4.zip"
-        sparkle:version="0.0.4"
+        url="http://github.com/downloads/ivanvc/mongodb-prefpane/mongodb.prefpane 0.1.0.zip"
+        sparkle:version="0.1.0"
         type="application/octet-stream"
-        length="641694"
-        sparkle:dsaSignature="MCwCFASjuMWtaJYOA6y7x7rD5q5m3piTAhRLS9o4UjCCWcsw/ZDZa1NpbNQRHA=="
+        length="642655"
+        sparkle:dsaSignature="MCwCFDgWa2k0GK8CNKLt8JYGHEa7er3bAhRUOdy4b7NB51nVX/2q+oqWrVEz8w=="
         />
     </item>
 
