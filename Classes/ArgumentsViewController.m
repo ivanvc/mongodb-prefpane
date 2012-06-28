@@ -26,8 +26,8 @@
 - (id)initWithCoder:(NSCoder *)aDecoder {
   self = [super initWithCoder:aDecoder];
   if (self) {
-    self.arguments  = (NSMutableArray *)[[Preferences sharedPreferences] objectForUserDefaultsKey:@"arguments"];
-    self.parameters = (NSMutableArray *)[[Preferences sharedPreferences] objectForUserDefaultsKey:@"parameters"];
+    self.arguments  = [NSMutableArray arrayWithArray:[[Preferences sharedPreferences] objectForUserDefaultsKey:@"arguments"]];
+    self.parameters = [NSMutableArray arrayWithArray:[[Preferences sharedPreferences] objectForUserDefaultsKey:@"parameters"]];
   }
 
   return self;
@@ -36,30 +36,32 @@
 #pragma mark - Preferences management
 
 - (void)updatePreferences {
-  [[Preferences sharedPreferences] setObject:(NSArray *)arguments forUserDefaultsKey:@"arguments"];
-  [[Preferences sharedPreferences] setObject:(NSArray *)parameters forUserDefaultsKey:@"parameters"];
+  [[Preferences sharedPreferences] setObject:[NSArray arrayWithArray:self.arguments]
+                          forUserDefaultsKey:@"arguments"];
+  [[Preferences sharedPreferences] setObject:[NSArray arrayWithArray:self.parameters]
+                          forUserDefaultsKey:@"parameters"];
 }
 
 #pragma mark - Table View Tasks
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-  return [arguments count];
+  return [self.arguments count];
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
   if ([[tableColumn identifier] isEqualToString:@"argumentColumn"])
-    return [arguments objectAtIndex:row];
+    return [self.arguments objectAtIndex:row];
   if ([[tableColumn identifier] isEqualToString:@"parametersColumn"])
-    return [parameters objectAtIndex:row];
+    return [self.parameters objectAtIndex:row];
 
   return nil;
 }
 
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
   if ([[tableColumn identifier] isEqualToString:@"argumentColumn"])
-    [arguments replaceObjectAtIndex:row withObject:(NSString *)object];
+    [self.arguments replaceObjectAtIndex:row withObject:(NSString *)object];
   if ([[tableColumn identifier] isEqualToString:@"parametersColumn"])
-    [parameters replaceObjectAtIndex:row withObject:(NSString *)object];
+    [self.parameters replaceObjectAtIndex:row withObject:(NSString *)object];
 
   [self updatePreferences];
 }
@@ -86,16 +88,18 @@
 #pragma mark - Interface Builder Actions
 
 - (void)removeArgument:(id)sender {
-  [arguments removeObjectAtIndex:[tableView selectedRow]];
-  [parameters removeObjectAtIndex:[tableView selectedRow]];
+  [self.arguments removeObjectAtIndex:[tableView selectedRow]];
+  [self.parameters removeObjectAtIndex:[tableView selectedRow]];
 
   [self updatePreferences];
   [self.tableView reloadData];
 }
 
 - (IBAction)addRow:(id)sender {
-  [arguments addObject:[NSString stringWithFormat:@"-argument%d", [arguments count]]];
-  [parameters addObject:[NSString stringWithFormat:@"parameter%d", [parameters count]]];
+  [self.arguments addObject:[NSString stringWithFormat:@"-argument%d",
+                             [self.arguments count]]];
+  [self.parameters addObject:[NSString stringWithFormat:@"parameter%d",
+                              [self.parameters count]]];
 
   [self.tableView reloadData];
 }
